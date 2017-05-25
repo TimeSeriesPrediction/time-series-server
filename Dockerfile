@@ -8,7 +8,7 @@ RUN mkdir -p /usr/src/time-series-server
 WORKDIR /usr/src/time-series-server
 
 # Copy server content to working directory
-COPY . /usr/src/app
+COPY . /usr/src/time-series-server
 
 # Install dependecies
 RUN npm install
