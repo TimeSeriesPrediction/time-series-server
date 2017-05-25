@@ -1,0 +1,19 @@
+{
+  "name": "time-series-server",
+  "version": "1.0.0",
+  "description": "A marks management and analytics portal for universities and schools",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TimeSeriesPrediction/time-series-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TimeSeriesPrediction/time-series-server/issues"
+  },
+  "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme"
+}
