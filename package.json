@@ -4,7 +4,7 @@
   "description": "A marks management and analytics portal for universities and schools",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "test": "jasmine"
   },
   "repository": {
@@ -20,9 +20,11 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "mongoose": "^4.10.2"
+    "mongoose": "^4.10.2",
+    "q": "^1.5.0"
   },
   "devDependencies": {
-    "jasmine": "^2.6.0"
+    "jasmine": "^2.6.0",
+    "request": "^2.81.0"
   }
 }

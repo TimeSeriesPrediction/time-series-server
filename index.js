@@ -3,9 +3,17 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+// MongoDB URL from the docker-compose file
+//const dbHost = 'mongodb://database/mean-docker';
+const dbHost = 'mongodb://database/mean-docker';
+
+// Connect to mongodb
+mongoose.connect(dbHost);
 
 // Get our API routes
-const api = require('./routes/api');
+const api = require('./app/routes/users');
 
 const app = express();
 
