@@ -4,7 +4,8 @@
   "description": "A marks management and analytics portal for universities and schools",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start" : "node index.js",
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/TimeSeriesPrediction/time-series-server/issues"
   },
-  "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme"
+  "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mongoose": "^4.10.2"
+  },
+  "devDependencies": {
+    "jasmine": "^2.6.0"
+  }
 }

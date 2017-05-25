@@ -3,9 +3,11 @@ version: '2' # specify docker-compose version
 # Define the services/containers to be run
 services:
   server: # Name of service
-    build: / # Directory of Dockerfile
+    build: . # Directory of Dockerfile
     ports:
       - "3000:3000" # Map exposed port to system port
+    links:
+      - database # link this service to the database service
 
   database: # Name of service
     image: mongo # Name of image to use
