@@ -1,9 +1,9 @@
 
-import baseConfig from './config.json';
-import environmentConfig from './config.deploy.json';
+let baseConfig = require ('./config.json');
+let environmentConfig = require( './config.deploy.json');
 
 function loadEnvironmentConfig() {
-    if (window.location.host.indexOf('localhost') === -1) {
+    if (process.env.NODE_ENV === 'prod') {
         return environmentConfig;
     }
 }
@@ -11,4 +11,4 @@ function loadEnvironmentConfig() {
 // Perform shallow copy onto base config
 let config = Object.assign({}, baseConfig, loadEnvironmentConfig());
 
-export default config;
+module.exports =  config;

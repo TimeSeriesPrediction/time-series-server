@@ -2,7 +2,6 @@ const Token = require('../../models/accessToken/accessTokenModel');
 const q = require('q');
 const UnauthorisedException = require('../../models/exceptions/UnauthorisedException');
 
-
 module.exports = function Authentication({
   crypto
 }){
