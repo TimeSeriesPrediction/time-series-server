@@ -2,15 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 module.exports = function UsersApi ({
-    usersService
+    usersService,
+    authentication
 }){
-    /* GET api listing. */
-    router.get('/', (req, res) => {
-        res.send('api works');
-    });
 
     /* GET all users. */
-    router.get('/users', (req, res) => {
+    router.get('/',authentication.authenticate,  (req, res) => {
+        
         usersService.getUsers()
         .then(function(users){
             res.status(200).json(users);
@@ -20,8 +18,13 @@ module.exports = function UsersApi ({
         });
     });
 
+    //For testing authentication - REMOVE
+    router.get('/profile',authentication.authenticate, (req, res) => {
+        res.status(200).json(req.user);
+    });
+
     /* GET one users. */
-    router.get('/users/:id', (req, res) => {
+    router.get('/:id', (req, res) => {
         usersService.getUserById(req.params.id)
         .then(function(user){
             res.status(200).json(user);
@@ -32,16 +35,17 @@ module.exports = function UsersApi ({
     });
 
     /* Create a user. */
-    router.post('/users', (req, res) => {
-        var name = req.body.name;
+    router.post('/', (req, res) => {
+        var name = req.body.username;
+        var password = req.body.password;
 
-        usersService.addUser(name)
+        usersService.addUser(name, password)
         .then(function(){
             res.status(201).json({
                 message: 'User created successfully'
             });
         })
-        .catch(function(){
+        .catch(function(error){
             res.status(500).send(error);
         });
     });

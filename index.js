@@ -4,6 +4,7 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const router = express.Router();
 
 // MongoDB URL from the docker-compose file
 //const dbHost = 'mongodb://database/mean-docker';
@@ -14,17 +15,34 @@ const dbHost = 'mongodb://localhost:27017/time-series';
 // Connect to mongodb
 mongoose.connect(dbHost);
 
+//Get utilities
+const crypto = require('./app/utilities/crypto/crypto')();
+
 // Get our data layer
-const userModel = require('./app/models/userModel');
+const userModel = require('./app/models/userModel/userModel')({
+    crypto: crypto
+});
 
 //Get our business layer
-const usersService = require('./app/data-services/usersService')({
-    userModel: userModel
-})
+//services
+
+//data-services
+const usersService = require('./app/data-services/usersService/usersService')({
+    userModel: userModel,
+    crypto: crypto
+});
 
 // Get our API layer
-const usersApi = require('./app/routes/usersApi')({
-    usersService: usersService
+const authentication = require('./app/services/authentication/authentication')({
+  crypto: crypto
+});
+const accountApi = require('./app/routes/accountApi/accountApi')({
+    usersService: usersService,
+    authentication: authentication
+});
+const usersApi = require('./app/routes/usersApi/usersApi')({
+    usersService: usersService,
+    authentication: authentication
 });
 
 const app = express();
@@ -34,7 +52,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Set our api routes
-app.use('/', usersApi);
+app.use('/users',  usersApi);
+app.use('/account',  accountApi);
 
 /**
  * Get port from environment and store in Express.

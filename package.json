@@ -18,9 +18,19 @@
   },
   "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme",
   "dependencies": {
+    "angular": "^1.6.4",
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
+    "crypto-js": "^3.1.9-1",
+    "crypto-promise": "^2.0.0",
+    "ejs": "^2.5.6",
     "express": "^4.15.3",
+    "express-session": "^1.15.3",
     "mongoose": "^4.10.2",
+    "oauth2orize": "^1.8.0",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
     "q": "^1.5.0"
   },
   "devDependencies": {
