@@ -38,4 +38,16 @@ describe ('crypto', function(){
             });       
         });
     });
+
+    it('should always compute the same hash with the same data', function(done){
+        crypto.getSalt().then(function(salt){
+            crypto.hash(data, salt).then(function(firstHash){
+                crypto.hash(data, salt).then(function(secondHash){
+                    expect(firstHash).toEqual(secondHash);
+                    done();
+                });     
+            });       
+        });
+    });
+
 });
