@@ -7,6 +7,20 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch via NPM",
+            "runtimeExecutable": "npm",
+            "windows": {
+                "runtimeExecutable": "npm.cmd"
+            },
+            "runtimeArgs": [
+                "run-script",
+                "test"
+            ],
+            "port": 5858
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch Program",
             "program": "${workspaceRoot}\\index.js"
         },

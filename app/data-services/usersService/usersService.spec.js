@@ -4,8 +4,8 @@ describe('UsersService', function(){
     var userModelMock, usersService;
 
     beforeEach(function(){
-        userModelMock = require('../models/userModel.mock');
-        usersService = require('../data-services/usersService')({
+        userModelMock = require('../../models/userModel/userModel.mock');
+        usersService = require('./usersService')({
             userModel: userModelMock
         });
     });

@@ -31,7 +31,7 @@ module.exports = function Authentication({
         }
         catch(error){
           var ex = new UnauthorisedException();
-          res.status(401).send(ex);
+          res.status(401).json(ex);
           return next(ex);
         }
 

@@ -18,7 +18,7 @@ module.exports = function({
     }
   });
 
-  userSchema.methods.verifyPassword = function(password, cb) {
+  userSchema.methods.verifyPassword = function(password) {
         var deferred = q.defer();
         let actualPassword = this.password;
 
