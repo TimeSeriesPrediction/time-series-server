@@ -4,7 +4,8 @@
   "description": "A marks management and analytics portal for universities and schools",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "set NODE_ENV=dev && node index.js",
+    "start-prod": "set NODE_ENV=prod node index.js",
     "test": "jasmine"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "crypto-js": "^3.1.9-1",
     "express": "^4.15.3",
     "mongoose": "^4.10.2",
     "q": "^1.5.0"
