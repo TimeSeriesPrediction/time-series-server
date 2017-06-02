@@ -48,6 +48,10 @@ const usersApi = require('./app/routes/usersApi/usersApi')({
 
 const app = express();
 
+// Testing using cross origin (remove later)
+var cors = require('cors');
+app.use(cors());
+
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
