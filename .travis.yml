@@ -1,5 +1,9 @@
 language: node_js
 node_js:
   - "6"
+
+env:
+  CODECLIMATE_REPO_TOKEN: fecf82b8d844e17e3855fd529f33dd7c85eb664f9dd25bbbed363262ec563104
+
 notifications:
     slack: capstonenewgenleaders:w6aiZa947QGvQ1GpkAgWy8KL
