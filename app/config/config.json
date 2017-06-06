@@ -1,3 +1,12 @@
 {
+    "email_server": {
+        "authentication": {
+            "password": "password",
+            "username": "example@example.com"
+        },
+        "host": "smtp.example.com",
+        "pooling": false,
+        "secure": false
+    },  
     "secret": "06d7366ebaaa2b86a1ace069792a29e6aa63e550d49f5744d8f13f17b456daeca15e935e99fa9a696e4251ede68140cae185b88f35199bb978280520d42dcd86"
 }

@@ -55,14 +55,15 @@ module.exports = function({
             return deferred.promise;
         },
 
-        addUser: function(username, password){
+        addUser: function(username, password, email){
             var deferred = q.defer();
 
             crypto.getSalt().then(function(salt){
                 crypto.hash(password, salt).then(function(hash){
                     let user = new userModel({
                         username: username,
-                        password: hash
+                        password: hash,
+                        email: email
                     });
 
                     user.save(error => {

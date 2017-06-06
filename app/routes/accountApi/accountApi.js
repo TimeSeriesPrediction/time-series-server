@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 module.exports = function AccountApi({
+    emailService,
     usersService,
     authentication
 }){
@@ -33,6 +34,22 @@ module.exports = function AccountApi({
             res.status(401).json({ message: 'authorisation has been denied for this request'});
         });
 
+    });
+
+    router.post('/forgot', (req, res) => {
+        
+        var email = req.body.email;
+
+        emailService.sendForgottenPassword(email)
+        .then(function(){
+            res.status(200).json({
+                message: 'An email was sent to ' + email
+            });
+        })
+        .catch(function(error){
+            res.status(500).send(error);
+        });
+        
     });
 
 
