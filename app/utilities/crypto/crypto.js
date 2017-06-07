@@ -34,6 +34,16 @@ module.exports = function(){
             deferred.resolve(hash);
 
             return deferred.promise;
+        },
+        
+        generateResetToken: function(){
+            var deferred = q.defer();
+
+            require('crypto').randomBytes(20, function(err, buffer) {
+                deferred.resolve(buffer.toString('hex'));
+            });
+
+            return deferred.promise;
         }
 
     }

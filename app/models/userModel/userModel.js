@@ -18,8 +18,11 @@ module.exports = function({
     },
     email: {
       type: String,
+      unique: true,
       required: true
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
   });
 
   userSchema.methods.verifyPassword = function(password) {

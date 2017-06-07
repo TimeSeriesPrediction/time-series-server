@@ -2,9 +2,10 @@
     "email_server": {
         "authentication": {
             "password": "password",
-            "username": "example@example.com"
+            "username": "username"
         },
-        "host": "smtp.example.com",
+        "display_name": "Time Series Support",
+        "host": "smtp-mail.example.com",
         "pooling": false,
         "secure": false
     },  

@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const q = require('q');
 const emailSettings = require('../../config').email_server;
 
+// TODO: Allow for services (GMail, Outlook, SendGrid) to be used in place of standard host url
 let transporter = nodemailer.createTransport({
     pool: emailSettings.pooling,
     host: emailSettings.host,
@@ -11,12 +12,16 @@ let transporter = nodemailer.createTransport({
         pass: emailSettings.authentication.password
     },
     tls: {
+        // TODO: Custom ciphers in config, will depend on provider which to use (SSLv3 used for outlook)
         ciphers:'SSLv3'
     }
 });
 
 let mailOptions = {
-    from: emailSettings.authentication.username
+    from: {
+        name: emailSettings.display_name,
+        address: emailSettings.authentication.username,
+    }
 };
 
 module.exports = function(){
@@ -34,8 +39,7 @@ module.exports = function(){
                 if (error) {
                     deferred.reject(error);
                 }
-                else
-                {
+                else {
                     deferred.resolve(info);
                 }
             });

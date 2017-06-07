@@ -1,8 +1,8 @@
 # Time Series Prediction Server
 
-[![Stories in Ready](https://badge.waffle.io/TimeSeriesPrediction/time-series-server.svg?label=ready&title=Ready)](http://waffle.io/TimeSeriesPrediction/time-series-server)
 [![Build Status](https://travis-ci.org/TimeSeriesPrediction/time-series-server.svg?branch=dev)](https://travis-ci.org/TimeSeriesPrediction/time-series-server)
 [![Code Climate](https://codeclimate.com/github/TimeSeriesPrediction/time-series-server/badges/gpa.svg)](https://codeclimate.com/github/TimeSeriesPrediction/time-series-server)
+[![Test Coverage](https://codeclimate.com/github/TimeSeriesPrediction/time-series-server/badges/coverage.svg)](https://codeclimate.com/github/codeclimate/codeclimate/coverage)
 [![dependencies Status](https://david-dm.org/TimeSeriesPrediction/time-series-server/status.svg)](https://david-dm.org/TimeSeriesPrediction/time-series-server)
 [![devDependencies Status](https://david-dm.org/TimeSeriesPrediction/time-series-server/dev-status.svg)](https://david-dm.org/TimeSeriesPrediction/time-series-server?type=dev)
 

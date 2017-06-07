@@ -6,6 +6,19 @@ module.exports = function AccountApi({
     usersService,
     authentication
 }){
+
+    router.get('/reset/:token', function(req, res) {    
+        var token = req.params.token;
+
+        usersService.getValidResetToken(token)
+        .then(function(){
+            res.status(200).json({ message: 'token accepted'});
+        })
+        .catch(function(){
+            res.status(401).json({ message: 'password reset is invalid or expired'});
+        });
+    });
+
     router.post('/token', function(req, res){
         var username = req.body.username;
         var password = req.body.password;
@@ -36,22 +49,42 @@ module.exports = function AccountApi({
 
     });
 
-    router.post('/forgot', (req, res) => {
-        
+    router.post('/forgot', (req, res) => { 
         var email = req.body.email;
+        var exists, token;
 
-        emailService.sendForgottenPassword(email)
-        .then(function(){
-            res.status(200).json({
-                message: 'An email was sent to ' + email
-            });
+        usersService.addResetToken(email)
+        .then(function(value){
+            exists = true;
+            token = value;
         })
-        .catch(function(error){
-            res.status(500).send(error);
+        .catch(function(){
+            exists = false;
+        })
+        .then(function(){
+            emailService.sendForgottenPassword(email, exists, token)
+            .then(function(){
+                res.status(200).json({ message: 'an email was sent to ' + email });
+            })
+            .catch(function(error){
+                res.status(500).send(error);
+            });
         });
         
     });
 
+    router.post('/reset', function(req, res) {    
+        var token = req.body.token;
+        var password = req.body.password;
+        
+        usersService.setNewPassword(token, password)
+        .then(function(){
+            res.status(200).json({ message: 'your password was successfully changed' });
+        })
+        .catch(function(){
+            res.status(401).json({ message: 'password reset is invalid or expired' });
+        });
+    });
 
     return router;
 }
