@@ -40,7 +40,6 @@ module.exports = function AccountApi({
 
     router.post('/forgot-password', (req, res) => { 
         var email = req.body.email;
-        var token;
 
         usersService.generatePasswordResetToken(email)
         .then(function(token){
@@ -62,7 +61,7 @@ module.exports = function AccountApi({
         
     });
 
-    router.post('/reset', function(req, res) {    
+    router.post('/reset-password', function(req, res) {    
         var token = req.body.token;
         var password = req.body.password;
         
