@@ -1,23 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const NotFoundException = require('../../models/exceptions/NotFoundException');
 
 module.exports = function AccountApi({
     emailService,
     usersService,
     authentication
 }){
-
-    router.get('/reset/:token', function(req, res) {    
-        var token = req.params.token;
-
-        usersService.getValidResetToken(token)
-        .then(function(){
-            res.status(200).json({ message: 'token accepted'});
-        })
-        .catch(function(){
-            res.status(401).json({ message: 'password reset is invalid or expired'});
-        });
-    });
 
     router.post('/token', function(req, res){
         var username = req.body.username;
@@ -49,27 +38,27 @@ module.exports = function AccountApi({
 
     });
 
-    router.post('/forgot', (req, res) => { 
+    router.post('/forgot-password', (req, res) => { 
         var email = req.body.email;
-        var exists, token;
+        var token;
 
-        usersService.addResetToken(email)
-        .then(function(value){
-            exists = true;
-            token = value;
-        })
-        .catch(function(){
-            exists = false;
-        })
-        .then(function(){
-            emailService.sendForgottenPassword(email, exists, token)
+        usersService.generatePasswordResetToken(email)
+        .then(function(token){
+            emailService.sendForgottenPassword(email, token)
             .then(function(){
                 res.status(200).json({ message: 'an email was sent to ' + email });
             })
             .catch(function(error){
-                res.status(500).send(error);
+                res.status(500).send();
             });
-        });
+        })
+        .catch(function(err){
+            if (err instanceof NotFoundException){
+                res.status(404).json(err);
+            }
+
+             res.status(500).send();
+        })
         
     });
 

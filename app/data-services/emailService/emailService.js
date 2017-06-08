@@ -1,4 +1,5 @@
 const q = require('q');
+const config = require('../../config/index');
 
 module.exports = function({
     mailer
@@ -6,18 +7,13 @@ module.exports = function({
 
     return {
 
-        sendForgottenPassword: function(email, exists, token){
+        sendForgottenPassword: function(email, token){
             var deferred = q.defer();
 
             var subject = "Password Reset Email";
             var html;
 
-            if (exists){
-                html = "<h2>You have requested a password change, please use <a>http://localhost:3000/account/reset?=" + token +"</a></h2>"
-            }
-            else{
-                html = "<h2>It seems someone has requested a password change for your address</h2>"
-            }
+            html = "<h2>You have requested a password change, please use <a>" + config.baseUrl + " /account/reset?=" + token +"</a></h2>";
 
             mailer.sendMail(email, subject, html)
             .then(function(info) {
