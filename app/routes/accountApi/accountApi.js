@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const NotFoundException = require('../../models/exceptions/NotFoundException');
 
 module.exports = function AccountApi({
+    emailService,
     usersService,
     authentication
 }){
+
     router.post('/token', function(req, res){
         var username = req.body.username;
         var password = req.body.password;
@@ -35,6 +38,41 @@ module.exports = function AccountApi({
 
     });
 
+    router.post('/forgot-password', (req, res) => { 
+        var email = req.body.email;
+
+        usersService.generatePasswordResetToken(email)
+        .then(function(token){
+            emailService.sendForgottenPassword(email, token)
+            .then(function(){
+                res.status(200).json({ message: 'an email was sent to ' + email });
+            })
+            .catch(function(error){
+                res.status(500).send();
+            });
+        })
+        .catch(function(err){
+            if (err instanceof NotFoundException){
+                res.status(404).json(err);
+            }
+
+             res.status(500).send();
+        })
+        
+    });
+
+    router.post('/reset-password', function(req, res) {    
+        var token = req.body.token;
+        var password = req.body.password;
+        
+        usersService.setNewPassword(token, password)
+        .then(function(){
+            res.status(200).json({ message: 'your password was successfully changed' });
+        })
+        .catch(function(){
+            res.status(401).json({ message: 'password reset is invalid or expired' });
+        });
+    });
 
     return router;
 }

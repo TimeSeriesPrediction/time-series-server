@@ -3,7 +3,7 @@ node_js:
   - "6"
 
 env:
-  CODECLIMATE_REPO_TOKEN: fecf82b8d844e17e3855fd529f33dd7c85eb664f9dd25bbbed363262ec563104
+  CODECLIMATE_REPO_TOKEN: 064e61fd189c040a80866ab03d103b36190cab998577618537ea868c9e9e9e9f
 
 notifications:
     slack: capstonenewgenleaders:w6aiZa947QGvQ1GpkAgWy8KL

@@ -18,6 +18,7 @@ mongoose.connect(dbHost);
 
 //Get utilities
 const crypto = require('./app/utilities/crypto/crypto')();
+const mailer = require('./app/utilities/mailer/mailer')();
 
 // Get our data layer
 const userModel = require('./app/models/userModel/userModel')({
@@ -28,6 +29,10 @@ const userModel = require('./app/models/userModel/userModel')({
 //services
 
 //data-services
+const emailService = require('./app/data-services/emailService/emailService')({
+    mailer: mailer
+});
+
 const usersService = require('./app/data-services/usersService/usersService')({
     userModel: userModel,
     crypto: crypto
@@ -35,9 +40,10 @@ const usersService = require('./app/data-services/usersService/usersService')({
 
 // Get our API layer
 const authentication = require('./app/services/authentication/authentication')({
-  crypto: crypto
+    crypto: crypto
 });
 const accountApi = require('./app/routes/accountApi/accountApi')({
+    emailService: emailService,
     usersService: usersService,
     authentication: authentication
 });

@@ -3,6 +3,8 @@ const q = require('q');
 const constants = require('../../constants');
 const appSettings = require('../../config');
 
+//TODO: This file should be changed to either use crypto or crypto-js, not both
+
 //TODO: Make this run asynchronously
 module.exports = function(){
     return{
@@ -32,6 +34,16 @@ module.exports = function(){
             var hash = crypto.MD5(data);
             hash = hash.toString() + salt;
             deferred.resolve(hash);
+
+            return deferred.promise;
+        },
+        
+        generateResetToken: function(){
+            var deferred = q.defer();
+
+            require('crypto').randomBytes(20, function(err, buffer) {
+                deferred.resolve(buffer.toString('hex'));
+            });
 
             return deferred.promise;
         }

@@ -24,7 +24,7 @@ describe('user model', function(){
             fail('Correct password failed to validate!');
             done();
         });
-    });;
+    });
 
     it ('should invalidate incorrect password', function(){
         user.verifyPassword('password')
