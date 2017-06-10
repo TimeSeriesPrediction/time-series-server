@@ -8,6 +8,23 @@ module.exports = function AccountApi({
     authentication
 }){
 
+    /**
+    * @api {post} /account/token Request login token
+    * @apiName GetAuthToken
+    * @apiGroup Account
+    * @apiDescription Logs the user in by returning an authentication token to be included in each subsequent request
+    *
+    * @apiParam {String} username User's unique username.
+    * @apiParam {String} password User's password.
+    *
+    * @apiSuccess {Object}  response Token response object
+    * @apiSuccess {String}  response.authToken Authentication token
+    * @apiErrorExample {json} Error-Response:
+    *     HTTP/1.1 401 Unauthorized
+    *     {
+    *       "message": "authorisation has been denied for this request"
+    *     }
+    */
     router.post('/token', function(req, res){
         var username = req.body.username;
         var password = req.body.password;
@@ -38,6 +55,27 @@ module.exports = function AccountApi({
 
     });
 
+    /**
+    * @api {post} /account/forgot-password Request a password reset email
+    * @apiName RequestPasswordResetEmail
+    * @apiGroup Account
+    * @apiDescription Requests a password reset token to be given to the user with the same email and sent to that email address.
+    *
+    * @apiParam {String} email Email address associated with your account.
+    *
+    * @apiSuccess {Object}  response Token response object
+    * @apiSuccess {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 200 Success
+    *     {
+    *       "message": "an email was sent to example@example.com"
+    *     }
+    * @apiErrorExample {json} Error-Response:
+    *     HTTP/1.1 404 Not Found
+    *     {
+    *       "message": "Email not found"
+    *     }
+    */
     router.post('/forgot-password', (req, res) => { 
         var email = req.body.email;
 
@@ -61,6 +99,29 @@ module.exports = function AccountApi({
         
     });
 
+
+    /**
+    * @api {post} /account/reset-password Change a user's password
+    * @apiName ResetPassword
+    * @apiGroup Account
+    * @apiDescription Changes a user's password with a password reset token
+    *
+    * @apiParam {String} token Password reset token.
+    * @apiParam {String} password New password.
+    *
+    * @apiSuccess {Object}  response Token response object
+    * @apiSuccess {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 200 Success
+    *     {
+    *       "message": "your password was successfully changed"
+    *     }
+    * @apiErrorExample {json} Error-Response:
+    *     HTTP/1.1 401 Unauthorised
+    *     {
+    *       "message": "password reset is invalid or expired"
+    *     }
+    */
     router.post('/reset-password', function(req, res) {    
         var token = req.body.token;
         var password = req.body.password;
