@@ -18,8 +18,7 @@ JASMINE_CONFIG_PATH="spec/support/jasmine.json" node --debug-brk --no-lazy node_
 
 ## Documentation
 
-apidoc.js
-==========
+### apidoc.js
 
 Install apidoc with:
 `npm install -g apidoc`
