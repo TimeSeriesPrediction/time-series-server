@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A marks management and analytics portal for universities and schools",
   "main": "index.js",
+  "apidoc": {
+    "title": "Saffron WebAPI Endpoints",
+    "url" : "http://localhost:3000"
+  },
   "scripts": {
     "start": "set NODE_ENV=dev && node index.js",
     "start-prod": "set NODE_ENV=prod node index.js",

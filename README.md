@@ -15,3 +15,20 @@ To attach the debugger for jasmine tests:
 ```bash
 JASMINE_CONFIG_PATH="spec/support/jasmine.json" node --debug-brk --no-lazy node_modules/jasmine/bin/jasmine.js
 ```
+
+## Documentation
+
+### apidoc.js
+
+Install apidoc with:
+`npm install -g apidoc`
+
+Update documentation with:
+`apidoc -i app/ -o apidoc/`
+
+View at:
+`apidoc/index.html`
+
+More information:
+`http://apidocjs.com/`
+
