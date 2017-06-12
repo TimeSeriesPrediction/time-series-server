@@ -1,4 +1,3 @@
-
 describe('UsersService', function(){
 
     var userModelMock, usersService;

@@ -1,4 +1,3 @@
-
 module.exports = {
     find: function(query, callback){
         callback(null, [

@@ -1,4 +1,3 @@
-
 let q = require('q');
 
 describe('Email Service', function() {

@@ -1,4 +1,3 @@
-
 var TokenSchema   = function (user, ipAddress){
       this.userId = user._id;
       this.username = user.username;
