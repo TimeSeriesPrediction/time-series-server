@@ -28,6 +28,14 @@ module.exports = function(){
             deferred.resolve(hash);
 
             return deferred.promise;
+        },
+
+        generateResetToken: function(){
+            var deferred = q.defer();
+
+            deferred.resolve("abcdefghijklmnopqrst");
+
+            return deferred.promise;
         }
 
     }
