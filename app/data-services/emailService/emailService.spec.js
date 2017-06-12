@@ -20,12 +20,16 @@ describe('Email Service', function() {
         spyOn(mockMailer, 'sendMail').and.callThrough();
     })
 
-    it('should send email wih correct url', function(){
-        emailService.sendForgottenPassword('test@email.com', '*T0K3N*');
-        expect(mockMailer.sendMail.calls.mostRecent().args[0]).toMatch(/test@email.com/);
-        expect(mockMailer.sendMail.calls.mostRecent().args[1]).toMatch(/Password Reset Email/);
-        expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/http/);
-        expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/\/account\/reset\?\=\*T0K3N\*/);
-    });
+    describe('sendForgottenPassword method', function(){
+
+        it('should send email wih correct url', function(){
+            emailService.sendForgottenPassword('test@email.com', '*T0K3N*');
+            expect(mockMailer.sendMail.calls.mostRecent().args[0]).toMatch(/test@email.com/);
+            expect(mockMailer.sendMail.calls.mostRecent().args[1]).toMatch(/Password Reset Email/);
+            expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/http/);
+            expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/\/account\/reset\?\=\*T0K3N\*/);
+        });
+    
+    })
 
 });

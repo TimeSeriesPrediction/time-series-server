@@ -31,7 +31,7 @@ module.exports = function AccountApi({
         var password = req.body.password;
 
         if (!username || !password){
-            res.status(401).json({ message: 'authorisation has been denied for this request'});
+            res.status(401).json({ message: 'Authorisation has been denied for this request'});
             return;
         }
     
@@ -48,7 +48,7 @@ module.exports = function AccountApi({
             }
         })
         .catch(function(){
-            res.status(401).json({ message: 'authorisation has been denied for this request'});
+            res.status(401).json({ message: 'Authorisation has been denied for this request'});
         });
 
     });
@@ -81,7 +81,7 @@ module.exports = function AccountApi({
         .then(function(token){
             emailService.sendForgottenPassword(email, token)
             .then(function(){
-                res.status(200).json({ message: 'an email was sent to ' + email });
+                res.status(200).json({ message: 'An email was sent to ' + email });
             })
             .catch(function(error){
                 res.status(500).send();
@@ -126,10 +126,10 @@ module.exports = function AccountApi({
         
         usersService.setNewPassword(token, password)
         .then(function(){
-            res.status(200).json({ message: 'your password was successfully changed' });
+            res.status(200).json({ message: 'Your password was successfully changed' });
         })
         .catch(function(){
-            res.status(401).json({ message: 'password reset is invalid or expired' });
+            res.status(401).json({ message: 'Password reset is invalid or expired' });
         });
     });
 
