@@ -1,4 +1,5 @@
 const express = require('express');
+const requestIp = require('request-ip');
 const router = express.Router();
 const NotFoundException = require('../../models/exceptions/NotFoundException');
 
@@ -37,10 +38,7 @@ module.exports = function AccountApi({
         usersService.getAuthenticatedUser(username, password)
         .then(function(user){
             if (user){
-                var ip = req.headers['x-forwarded-for'] || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress ||
-                    req.connection.socket.remoteAddress;
+                var ip = requestIp.getClientIp(req);
 
                 authentication.generateAuthToken(user, ip).then(function(token){
                     res.status(200).json({

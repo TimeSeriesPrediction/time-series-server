@@ -1,5 +1,6 @@
-const Token = require('../../models/accessToken/accessTokenModel');
 const q = require('q');
+const requestIp = require('request-ip');
+const Token = require('../../models/accessToken/accessTokenModel');
 const UnauthorisedException = require('../../models/exceptions/UnauthorisedException');
 
 module.exports = function Authentication({
@@ -19,10 +20,8 @@ module.exports = function Authentication({
             throw new UnauthorisedException();
           }
 
-          var ip = req.headers['x-forwarded-for'] || 
-                  req.connection.remoteAddress || 
-                  req.socket.remoteAddress ||
-                  req.connection.socket.remoteAddress;
+          var ip = requestIp.getClientIp(req);
+          
           if (ip !== user.ipAddress){
              throw new UnauthorisedException();
           }
