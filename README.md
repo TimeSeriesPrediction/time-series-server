@@ -9,7 +9,7 @@
 [![View us at waffle.io](https://img.shields.io/badge/View%20our%20issue%20board%20at-Waffle.io-blue.svg)](http://waffle.io/TimeSeriesPrediction/time-series-server)
 [![License](https://img.shields.io/github/license/TimeSeriesPrediction/time-series-server.svg)](https://raw.githubusercontent.com/TimeSeriesPrediction/time-series-server/master/LICENSE)
 
-This repository contains the source code for the server of the Time Series Prediction project.
+This repository contains the source code for the server of the Time Series Prediction project
 
 ## Configuration
 
@@ -19,7 +19,7 @@ The application makes use of the [node-config](https://github.com/lorenwest/node
 - Get and Has methods for configurations with error handling
 - Comments allowed in the configuration file
 
-The `default.json` is the standard configuration file, and should contain no personal information. The `dev.json` contains overrides which should be used during development, and has been added into the `.gitignore` to prevent people accidentaly uploading personal details. To change configurations simply add the `dev.json` file, and replace the desired options as needed.
+The `default.json` is the standard configuration file, and should contain no personal information. The `dev.json` contains overrides which should be used during development, and has been added into the `.gitignore` to prevent people accidentaly uploading personal details. To change configurations simply add the `dev.json` file, and replace the desired options as needed
 
 ## Testing
 
@@ -44,4 +44,10 @@ View at:
 
 More information:
 `http://apidocjs.com/`
+
+## Linting
+
+The applicaiton makes use of ESLint to ensure code quality is met, if you feel a rule needs to be added, please add it to the `.eslintrc.yml` file
+
+**Note**: If using Visual Studio Code, the ESLint extension can be added to provide full code check integration
 
