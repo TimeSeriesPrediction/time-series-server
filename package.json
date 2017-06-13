@@ -7,10 +7,16 @@
     "title": "Saffron WebAPI Endpoints",
     "url": "http://localhost:3000"
   },
+  "nyc": {
+    "exclude": [
+      "**/*.spec.js",
+      "**/*.mock.js"
+    ]
+  },
   "scripts": {
     "start": "set NODE_ENV=dev && node index.js",
     "start-prod": "set NODE_ENV=prod node index.js",
-    "test": "jasmine"
+    "test": "nyc --reporter=lcov jasmine"
   },
   "repository": {
     "type": "git",
@@ -37,6 +43,7 @@
     "cors": "^2.8.3",
     "eslint": "^4.0.0",
     "jasmine": "^2.6.0",
+    "nyc": "^11.0.2",
     "request": "^2.81.0",
     "valid-url": "^1.0.9"
   }
