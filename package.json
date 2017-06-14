@@ -14,9 +14,9 @@
     ]
   },
   "scripts": {
-    "start": "set NODE_ENV=dev && node index.js",
-    "start-prod": "set NODE_ENV=prod node index.js",
-    "test": "nyc --reporter=lcov jasmine"
+    "start": "set NODE_ENV=dev&&node index.js",
+    "start-prod": "set NODE_ENV=prod&&node index.js",
+    "test": "set NODE_ENV=test&&nyc --reporter=lcov jasmine"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/TimeSeriesPrediction/time-series-server#readme",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "config": "^1.26.1",
     "crypto-js": "^3.1.9-1",

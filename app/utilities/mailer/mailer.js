@@ -12,7 +12,7 @@ let configuration = {};
 * This connects to a service (Outlook, Gmail, Sendgrid etc.) if a service is set in the config.
 * If unavailable, one must configure a host along with port to connect directly via smtp.
 */
-if (emailSettings.has('service')) {
+if (email_config.has('service') && email_config.get('service') !== null) {
     configuration.service = email_config.get('service');
 }
 else {
@@ -25,7 +25,11 @@ configuration.auth = {};
 configuration.auth.user = email_config.get('authentication.username');
 configuration.auth.pass = email_config.get('authentication.password');
 
-if (config.has('tls.ciphers')) {
+/* 
+* If custom ciphers are required, be sure to specify them in the config file 
+* (e.g outlook smtp requires the SSLv3 ciphers)
+*/
+if (email_config.has('tls.ciphers') && email_config.get('tls.ciphers') !== null) {
     configuration.tls = {};
     configuration.tls.ciphers = email_config.get('tls.ciphers');
 }
@@ -35,14 +39,14 @@ transporter.use('compile', htmlToText()); //Sets the text field of an email base
   
 // Verfiy whether mailer is ready to receive emails or not
 transporter.verify(function(error, success) {
-   if (error) {
-        console.log("Failed to start mail service with " + error);
-        console.log("Mail features will be disabled till configuration is corrected")
-        connected = false;
-   } else {
-        console.log('Mail service is ready to receive messages');
-        connected = true;
-   }
+    if (error) {
+            console.log("Failed to start mail service with " + error);
+            console.log("Mail features will be disabled till configuration is corrected")
+            connected = false;
+    } else {
+            console.log('Mail service is ready to receive messages');
+            connected = true;
+    }
 });
 
 // Set the display name and senders address for your server
