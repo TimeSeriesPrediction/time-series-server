@@ -9,11 +9,15 @@ describe('UsersService', function(){
         });
     });
 
-    it('should return a list of users', function(done){
-        usersService.getUsers().then(function(users){
-            expect(users.length).toBe(2);
-            done();
+    describe('getUsers method', function(){
+
+        it('should return a list of users', function(done){
+            usersService.getUsers().then(function(users){
+                expect(users.length).toBe(2);
+                done();
+            });
         });
-    });
+        
+    })
 
 });

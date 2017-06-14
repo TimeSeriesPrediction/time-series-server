@@ -1,4 +1,5 @@
 const express = require('express');
+const requestIp = require('request-ip');
 const router = express.Router();
 const NotFoundException = require('../../models/exceptions/NotFoundException');
 
@@ -30,17 +31,14 @@ module.exports = function AccountApi({
         var password = req.body.password;
 
         if (!username || !password){
-            res.status(401).json({ message: 'authorisation has been denied for this request'});
+            res.status(401).json({ message: 'Authorisation has been denied for this request'});
             return;
         }
     
         usersService.getAuthenticatedUser(username, password)
         .then(function(user){
             if (user){
-                var ip = req.headers['x-forwarded-for'] || 
-                    req.connection.remoteAddress || 
-                    req.socket.remoteAddress ||
-                    req.connection.socket.remoteAddress;
+                var ip = requestIp.getClientIp(req);
 
                 authentication.generateAuthToken(user, ip).then(function(token){
                     res.status(200).json({
@@ -50,7 +48,7 @@ module.exports = function AccountApi({
             }
         })
         .catch(function(){
-            res.status(401).json({ message: 'authorisation has been denied for this request'});
+            res.status(401).json({ message: 'Authorisation has been denied for this request'});
         });
 
     });
@@ -83,7 +81,7 @@ module.exports = function AccountApi({
         .then(function(token){
             emailService.sendForgottenPassword(email, token)
             .then(function(){
-                res.status(200).json({ message: 'an email was sent to ' + email });
+                res.status(200).json({ message: 'An email was sent to ' + email });
             })
             .catch(function(error){
                 res.status(500).send();
@@ -128,10 +126,10 @@ module.exports = function AccountApi({
         
         usersService.setNewPassword(token, password)
         .then(function(){
-            res.status(200).json({ message: 'your password was successfully changed' });
+            res.status(200).json({ message: 'Your password was successfully changed' });
         })
         .catch(function(){
-            res.status(401).json({ message: 'password reset is invalid or expired' });
+            res.status(401).json({ message: 'Password reset is invalid or expired' });
         });
     });
 

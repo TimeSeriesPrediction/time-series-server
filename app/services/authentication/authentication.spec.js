@@ -1,9 +1,12 @@
 const cryptoMock = require('../../utilities/crypto/crypto.mock')();
 const UnauthorisedException = require('../../models/exceptions/UnauthorisedException');
+let authService = require('./authentication')({
+    crypto: cryptoMock
+});
 
-describe('the authentication service', function(){
+describe('authentication service', function(){
     
-    let authService, tokenObj, token, mockReq, mockRes;
+    let tokenObj, token, mockReq, mockRes;
     let unauthorisedException = new UnauthorisedException();
 
     let spyNext = {
@@ -11,16 +14,12 @@ describe('the authentication service', function(){
     }
 
     beforeEach(function(){
-        authService = require('./authentication')({
-            crypto: cryptoMock
-        });
-
         let currentDate = new Date();
 
         tokenObj = {
             userId: '123',
             username: 'Testee',
-            fullname: 'Tester von testacles',
+            fullname: 'Tester Von Testacles',
             userPermissions: {},
             ipAddress: '123.123.123.123',
             expiry: currentDate.setTime(currentDate.getTime() + (1*60*60*1000))
@@ -121,12 +120,12 @@ describe('the authentication service', function(){
         });
     });
 
-    describe('generateToken method', function(){
+    describe('generateAuthToken method', function(){
 
         let user = {
             id: '123',
             username: 'Testee',
-            fullname: 'Tester von testacles',
+            fullname: 'Tester Von Testacles',
             permissions: {}
         }
         let tokenResult = '*encrypted=' + JSON.stringify(tokenObj) + '=encrypted*';
@@ -138,5 +137,5 @@ describe('the authentication service', function(){
                 done();
             })
         });
-    })
+    });
 })

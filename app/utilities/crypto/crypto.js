@@ -1,9 +1,8 @@
 const crypto = require('crypto-js');
+const uid = require('rand-token').uid;
 const q = require('q');
 const config = require('config');
 const constants = require('../../constants');
-
-//TODO: This file should be changed to either use crypto or crypto-js, not both
 
 //TODO: Make this run asynchronously
 module.exports = function(){
@@ -41,9 +40,7 @@ module.exports = function(){
         generateResetToken: function(){
             var deferred = q.defer();
 
-            require('crypto').randomBytes(20, function(err, buffer) {
-                deferred.resolve(buffer.toString('hex'));
-            });
+            deferred.resolve(uid(20)); // Generate 20 string random hex base token
 
             return deferred.promise;
         }
