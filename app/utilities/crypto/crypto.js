@@ -1,7 +1,7 @@
 const crypto = require('crypto-js');
 const q = require('q');
+const config = require('config');
 const constants = require('../../constants');
-const appSettings = require('../../config');
 
 //TODO: This file should be changed to either use crypto or crypto-js, not both
 
@@ -9,12 +9,12 @@ const appSettings = require('../../config');
 module.exports = function(){
     return{
         encrypt: function(data){
-            var ciphertext = crypto.AES.encrypt(data, appSettings.secret);
+            var ciphertext = crypto.AES.encrypt(data, config.get('secret'));
             return ciphertext.toString();
         },
 
         decrypt: function(data){
-            var bytes = crypto.AES.decrypt(data, appSettings.secret);
+            var bytes = crypto.AES.decrypt(data, config.get('secret'));
             return bytes.toString(crypto.enc.Utf8);
         },
 

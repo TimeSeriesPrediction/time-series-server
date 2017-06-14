@@ -5,16 +5,13 @@ const path = require('path');
 const http = require('http');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const config = require('config');
+const cors = require('cors');
 const router = express.Router();
 
-// MongoDB URL from the docker-compose file
-//const dbHost = 'mongodb://database/mean-docker';
-
-//Use if running app without docker (after starting mongo manually)
-const dbHost = 'mongodb://localhost:27017/time-series';
-
-// Connect to mongodb
-mongoose.connect(dbHost);
+// Connect to mongodb and set promise library to global library
+mongoose.Promise = require('q');
+mongoose.connect(config.get('database.host'));
 
 //Get utilities
 const crypto = require('./app/utilities/crypto/crypto')();
@@ -54,8 +51,7 @@ const usersApi = require('./app/routes/usersApi/usersApi')({
 
 const app = express();
 
-// Testing using cross origin (remove later)
-var cors = require('cors');
+// Adds cross origin support between client and server
 app.use(cors());
 
 // Parsers for POST data

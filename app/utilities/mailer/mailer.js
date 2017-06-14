@@ -1,26 +1,25 @@
 const nodemailer = require('nodemailer');
 const q = require('q');
-const emailSettings = require('../../config').email_server;
+const email_config = require('config').get('email_server');
 
 // TODO: Allow for services (GMail, Outlook, SendGrid) to be used in place of standard host url
 let transporter = nodemailer.createTransport({
-    pool: emailSettings.pooling,
-    host: emailSettings.host,
-    secure: emailSettings.secure,
+    pool: email_config.get('pooling'),
+    host: email_config.get('host'),
+    secure: email_config.get('secure'),
     auth: {
-        user: emailSettings.authentication.username,
-        pass: emailSettings.authentication.password
+        user: email_config.get('authentication.username'),
+        pass: email_config.get('authentication.password')
     },
     tls: {
-        // TODO: Custom ciphers in config, will depend on provider which to use (SSLv3 used for outlook)
-        ciphers:'SSLv3'
+        ciphers: email_config.get('tls.ciphers')
     }
 });
 
 let mailOptions = {
     from: {
-        name: emailSettings.display_name,
-        address: emailSettings.authentication.username,
+        name: email_config.get('display_name'),
+        address: email_config.get('authentication.username')
     }
 };
 

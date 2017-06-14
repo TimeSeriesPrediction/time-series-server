@@ -1,4 +1,3 @@
-
 const cryptoMock = require('../../utilities/crypto/crypto.mock')();
 const UnauthorisedException = require('../../models/exceptions/UnauthorisedException');
 

@@ -57,7 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
+# Visual Studio Code files
 .vscode/
 
+# Ignore users personal configuration file
+config/dev.json
+
+# APIDoc generated output
 apidoc/
 
