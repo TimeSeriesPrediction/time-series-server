@@ -2,8 +2,13 @@ language: node_js
 node_js:
   - "6"
 
-env:
-  CODECLIMATE_REPO_TOKEN: 064e61fd189c040a80866ab03d103b36190cab998577618537ea868c9e9e9e9f
+addons:
+  code_climate:
+    repo_token: 064e61fd189c040a80866ab03d103b36190cab998577618537ea868c9e9e9e9f
 
 notifications:
     slack: capstonenewgenleaders:w6aiZa947QGvQ1GpkAgWy8KL
+
+after_success:
+  - npm install -g codeclimate-test-reporter
+  - if [ "$TRAVIS_BRANCH" = "dev" ]; then codeclimate-test-reporter < coverage/lcov.info;

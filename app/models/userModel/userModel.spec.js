@@ -1,7 +1,11 @@
+const mongoose = require('mongoose');
 let crypto = require('../../utilities/crypto/crypto')();
 let UserModel = require('./userModel')({
     crypto
 });
+
+// Replace deprecated library during test
+mongoose.Promise = require('bluebird');
 
 describe('user model', function(){
 
@@ -14,7 +18,6 @@ describe('user model', function(){
         });
     });
 
-    // TODO: Remove deprecation warning during tests for mongoose
     describe('require validation', function(){
 
         it ('should be invalid if username is empty', function(done){

@@ -13,7 +13,7 @@
         },
         "tls": {
             // Use if custom ciphers are required for TLS in your connection else don't touch
-            "ciphers": ""
+            "ciphers": null
         },
         // The displayed name for emails from this server
         "display_name": "Time Series Support",
@@ -24,7 +24,7 @@
         // Should be false when using port 587 and true when using port 465
         "secure": false,
         // Define only if you are using OAUTH2 to connect to a service. For a list of available services check nodemailer (https://nodemailer.com/smtp/well-known/)
-        "service": ""
+        "service": null
     },
     // Your secret token, used for application encryption protocols. If you think it has been compromised, please regenerate a new one.
     "secret": "06d7366ebaaa2b86a1ace069792a29e6aa63e550d49f5744d8f13f17b456daeca15e935e99fa9a696e4251ede68140cae185b88f35199bb978280520d42dcd86" 
