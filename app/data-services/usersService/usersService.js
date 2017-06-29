@@ -1,5 +1,18 @@
 const q = require('q');
+var winston = require('winston');
 const NotFoundException = require('../../models/exceptions/NotFoundException');
+
+//logger file creation
+var logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.File)({
+            name: 'time-series',
+            filename: 'time-series-login-info.log',
+    json: true,
+            level: 'info'
+        })
+    ]
+});
 
 module.exports = function({
     userModel,
@@ -8,15 +21,18 @@ module.exports = function({
     return {
 
         getAuthenticatedUser: function(username, password){
+                         //insert logging here
             var deferred = q.defer();
 
             userModel.findOne({username: username}, (err, user) => {
                 if (user) {
                     user.verifyPassword(password).then(function(){
                         deferred.resolve(user);
+                         logger.log('info', 'Login successful.',{username: username });
                     })
                     .catch(function(){
                         deferred.reject();
+                        logger.log('error', 'Unsuccessful login attempt by user.',{username: username });
                     });
                     
                 }
@@ -112,7 +128,9 @@ module.exports = function({
         },
 
         addUser: function(username, password, email){
-            var deferred = q.defer();
+
+           
+             var deferred = q.defer();
 
             crypto.getSalt().then(function(salt){
                 crypto.hash(password, salt).then(function(hash){
@@ -125,8 +143,9 @@ module.exports = function({
                     user.save(error => {
                         if (error) {
                             deferred.reject(error);
+                            
                         }
-
+                    
                         deferred.resolve();
                     });
                 });
