@@ -10,7 +10,7 @@ const cors = require('cors');
 const router = express.Router();
 
 // Connect to mongodb and set promise library to global library
-mongoose.Promise = require('q');
+mongoose.Promise = require('bluebird');
 mongoose.connect(config.get('database.host'));
 
 //Get utilities
