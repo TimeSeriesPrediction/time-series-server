@@ -1,4 +1,5 @@
 const q = require('q');
+const bluebird = require('bluebird');
 const NotFoundException = require('../../models/exceptions/NotFoundException');
 
 module.exports = function({
@@ -129,6 +130,49 @@ module.exports = function({
 
                         deferred.resolve();
                     });
+                });
+            });
+
+            return deferred.promise;
+        },
+
+        //TODO: Currently it adds users until one user gives an error and then all the rest fails. 
+        //It needs to do some validation and add as many users as possible even when one errors, then give feedback on which users weren't added
+        addUsers: function(usersToAdd){
+            let deferred = q.defer();
+
+            let userPromises = [];
+            let users = [];
+
+            for(var i = 0; i < usersToAdd.length; i++){
+                let userToAdd = usersToAdd[i];
+                let internalDeferred = q.defer();
+
+                crypto.getSalt().then(function(salt){
+                    crypto.hash(userToAdd.password, salt).then(function(hash){
+                        let user = new userModel({
+                            username: userToAdd.username,
+                            password: hash,
+                            email: userToAdd.email
+                        });
+
+                        if (user.validate()){
+                            users.push(user);
+                        }
+
+                        internalDeferred.resolve();
+                    });
+                });
+
+                userPromises.push(internalDeferred);
+            }
+
+            bluebird.all(userPromises).then(() => {
+                userModel.collection.insertMany(users, (err) => {
+                    if(err){
+                        deferred.reject(err);
+                    }
+                    deferred.resolve();
                 });
             });
 

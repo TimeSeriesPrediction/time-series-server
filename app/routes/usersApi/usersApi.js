@@ -114,5 +114,37 @@ module.exports = function UsersApi ({
         });
     });
 
+    /**
+    * @api {post} /users/add-users Add users
+    * @apiName PostUsers
+    * @apiGroup Users
+    * @apiDescription Adds an array of users to the database
+    *
+    * @apiParam {Object[]} users An array of user objects
+    * @apiParam {String} users.username New user's username
+    * @apiParam {String} users.password New user's password
+    * @apiParam {String} users.email New user's email
+    *
+    * @apiSuccess (201) {Object}  response Response object
+    * @apiSuccess (201) {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 201 Created
+    *     {
+    *       "message": "Users created successfully"
+    *     }
+    */
+    router.post('/add-users', (req, res) => {
+        var users = req.body.users;
+
+        usersService.addUsers(users)
+        .then(function() {
+            res.data.message = 'Users created successfully';
+            res.status(201).send(res.data);
+        })
+        .catch(function(error) {
+            res.status(500).send(error);
+        });
+    });
+
     return router;
 } 
