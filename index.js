@@ -54,6 +54,7 @@ const app = express();
 // Adds cross origin support between client and server
 app.use(cors());
 
+//Sets up response data object for use in other middleware
 app.use((req, res, next) => {
     res.data = {};
     next();
