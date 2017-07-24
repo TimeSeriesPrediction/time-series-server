@@ -44,18 +44,6 @@ module.exports = function({
         return deferred.promise;
   };
 
-  userSchema.methods.validate = function() {
-    return !isNullOrWhiteSpace(this.username) &&
-      !isNullOrWhiteSpace(this.password) && 
-      !isNullOrWhiteSpace(this.email);
-  }
-
-  function isNullOrWhiteSpace(input){
-     if (typeof input === 'undefined' || input == null) return true;
-
-     return input.replace(/\s/g, '').length < 1;
-  }
-
   return mongoose.model('User', userSchema);
 
 }
