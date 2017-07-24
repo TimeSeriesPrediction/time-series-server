@@ -26,6 +26,8 @@ module.exports = function Authentication({
              throw new UnauthorisedException();
           }
 
+          res.data.authToken = crypto.encrypt(JSON.stringify(new Token(user, ip)));
+
           req.user = user;
         }
         catch(error){
