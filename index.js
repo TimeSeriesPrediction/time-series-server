@@ -21,6 +21,7 @@ const mailer = require('./app/utilities/mailer/mailer')();
 const userModel = require('./app/models/userModel/userModel')({
     crypto: crypto
 });
+const moduleModel = require('./app/models/moduleModel/moduleModel')();
 
 //Get our business layer
 //services
@@ -33,6 +34,10 @@ const emailService = require('./app/data-services/emailService/emailService')({
 const usersService = require('./app/data-services/usersService/usersService')({
     userModel: userModel,
     crypto: crypto
+});
+const modulesService = require('./app/data-services/modulesService/modulesService')({
+    moduleModel: moduleModel,
+    userModel: userModel
 });
 
 // Get our API layer
@@ -48,8 +53,17 @@ const usersApi = require('./app/routes/usersApi/usersApi')({
     usersService: usersService,
     authentication: authentication
 });
+const modulesApi = require('./app/routes/modulesApi/modulesApi')({
+    modulesService: modulesService
+});
 
 const app = express();
+
+//Sets up response data object for use in other middleware
+app.use((req, res, next) => {
+    res.data = {};
+    next();
+})
 
 // Adds cross origin support between client and server
 app.use(cors());
@@ -61,6 +75,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Set our api routes
 app.use('/users',  usersApi);
 app.use('/account',  accountApi);
+app.use('/modules', authentication.authenticate, modulesApi);
 
 /**
  * Get port from environment and store in Express.
