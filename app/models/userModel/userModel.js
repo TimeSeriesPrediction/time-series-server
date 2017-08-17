@@ -6,6 +6,7 @@ module.exports = function({
   crypto
 }){
 
+  //TODO: Add all other user properties (and update usersService to match)
   const userSchema = new mongoose.Schema({
     userId: {
       type: String,
