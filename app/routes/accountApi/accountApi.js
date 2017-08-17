@@ -31,7 +31,7 @@ module.exports = function AccountApi({
         var password = req.body.password;
 
         if (!username || !password){
-            res.status(401).json({ message: 'Authorisation has been denied for this request'});
+            res.status(401).send({ message: 'Authorisation has been denied for this request'});
             return;
         }
     
@@ -41,14 +41,14 @@ module.exports = function AccountApi({
                 var ip = requestIp.getClientIp(req);
 
                 authentication.generateAuthToken(user, ip).then(function(token){
-                    res.status(200).json({
+                    res.status(200).send({
                         authToken: token
                     });
                 });
             }
         })
         .catch(function(){
-            res.status(401).json({ message: 'Authorisation has been denied for this request'});
+            res.status(401).send({ message: 'Authorisation has been denied for this request'});
         });
 
     });
@@ -81,7 +81,8 @@ module.exports = function AccountApi({
         .then(function(token){
             emailService.sendForgottenPassword(email, token)
             .then(function(){
-                res.status(200).json({ message: 'An email was sent to ' + email });
+                res.data.message = 'An email was sent to ' + email;
+                res.status(200).send(res.data);
             })
             .catch(function(error){
                 res.status(500).send();
@@ -126,10 +127,11 @@ module.exports = function AccountApi({
         
         usersService.setNewPassword(token, password)
         .then(function(){
-            res.status(200).json({ message: 'Your password was successfully changed' });
+            res.data.message = 'Your password was successfully changed';
+            res.status(200).send(res.data);
         })
         .catch(function(){
-            res.status(401).json({ message: 'Password reset is invalid or expired' });
+            res.status(401).send({ message: 'Password reset is invalid or expired' });
         });
     });
 

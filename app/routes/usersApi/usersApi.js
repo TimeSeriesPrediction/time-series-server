@@ -25,7 +25,8 @@ module.exports = function UsersApi ({
         
         usersService.getUsers()
         .then(function(users){
-            res.status(200).json(users);
+            res.data.users = users;
+            res.status(200).send(res.data);
         })
         .catch(function(err){
             res.status(500).send(err)
@@ -48,7 +49,8 @@ module.exports = function UsersApi ({
     * @apiSuccess {String}  user.resetPasswordExpires Password reset token expiry
     */
     router.get('/profile',authentication.authenticate, (req, res) => {
-        res.status(200).json(req.user);
+        res.data.user = req.user;
+        res.status(200).send(res.data);
     });
 
     /**
@@ -71,7 +73,8 @@ module.exports = function UsersApi ({
     router.get('/:id',authentication.authenticate, (req, res) => {
         usersService.getUserById(req.params.id)
         .then(function(user){
-            res.status(200).json(user);
+            res.data.user = user;
+            res.status(200).send(res.data);
         })
         .catch(function(err){
             res.status(500).send(err);
@@ -103,9 +106,8 @@ module.exports = function UsersApi ({
 
         usersService.addUser(userId, password, email)
         .then(function(){
-            res.status(201).json({
-                message: 'User created successfully'
-            });
+            res.data.message = 'User created successfully';
+            res.status(201).send(res.data);
         })
         .catch(function(error){
             res.status(500).send(error);

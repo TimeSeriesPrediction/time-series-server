@@ -38,7 +38,8 @@ describe('authentication service', function(){
 
         mockRes = {
             status: function(){},
-            json: function(){}
+            json: function(){},
+            data: {}
         }
 
         spyOn(mockRes, 'status').and.returnValue(mockRes);

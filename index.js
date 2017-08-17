@@ -68,6 +68,12 @@ app.use((req, res, next) => {
 // Adds cross origin support between client and server
 app.use(cors());
 
+//Sets up response data object for use in other middleware
+app.use((req, res, next) => {
+    res.data = {};
+    next();
+})
+
 // Parsers for POST data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
