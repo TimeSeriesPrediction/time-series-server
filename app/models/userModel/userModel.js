@@ -8,10 +8,11 @@ module.exports = function({
 
   //TODO: Add all other user properties (and update usersService to match)
   const userSchema = new mongoose.Schema({
-    username: {
+    userId: {
       type: String,
       unique: true,
-      required: true
+      required: true,
+      index: true
     },
     password: {
       type: String,
