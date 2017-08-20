@@ -27,11 +27,11 @@ module.exports = function AccountApi({
     *     }
     */
     router.post('/token', function(req, res){
-        var username = req.body.username;
+        var username = req.body.userId;
         var password = req.body.password;
 
         if (!username || !password){
-            res.status(401).send({ message: 'Authorisation has been denied for this request'});
+            res.status(401).send({ message: '/*Authorisation has been denied for this request'});
             return;
         }
     
@@ -48,7 +48,7 @@ module.exports = function AccountApi({
             }
         })
         .catch(function(){
-            res.status(401).send({ message: 'Authorisation has been denied for this request'});
+            res.status(401).send({ message: '****Authorisation has been denied for this request'});
         });
 
     });

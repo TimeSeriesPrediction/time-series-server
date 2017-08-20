@@ -58,13 +58,21 @@ module.exports = function({
 
         getAssessmentsByModule: function(moduleCode, year) {
             var deferred = q.defer();
-
+            var y = "Y" + year;
             moduleModel
                 .findOne({code: moduleCode})
                 .select('assessments.Y' + year)
                 .exec((err, assessments) => {
-                    //Get assessments from assessment ids
-                });
+                        if(assessments)
+                            {
+                                deferred.resolve(assessments);
+
+                            }
+                            else{
+                                deferred.reject(err);
+                            }
+                    });
+               
 
             return deferred.promise;
         },
@@ -113,6 +121,55 @@ module.exports = function({
             });
 
             return deferred.promise;
+        },
+
+        addAssessment : function(moduleCode, year, assessment)
+        {
+            var deferred = q.defer();
+            let yearProp = 'Y' + year;
+
+            moduleModel.findOne({ code: moduleCode} , function(err, mod) {
+                if(mod){
+                    if(!mod.assessments){
+                        mod.assessments = {};
+                    }
+                    var assessmentYear = mod.assessments[yearProp];
+                    if(!assessmentYear){
+                        mod.assessments[yearProp] = [];
+
+                    }
+                    mod.assessments[yearProp].push(assessment);
+                    mod.markModified('assessments');
+                    mod.save();
+                    deferred.resolve();
+                }
+                else {
+                    deferred.reject();
+                }
+                
+            });
+             return deferred.promise;
+        },
+
+        addQuery : function(moduleCode, year, number, query)
+        {
+            var deferred = q.defer();
+            let yearProp = 'Y' + year;
+
+           /* moduleModel.findOne({ code: moduleCode} , function(err, mod) {
+                if(mod){
+                   
+                    mod.push(query);
+                    mod.markModified('queries');
+                    mod.save();
+                    deferred.resolve();
+                }
+                else {
+                    deferred.reject();
+                }
+                
+            });*/
+             return deferred.promise;
         },
 
         updateHOD: function(moduleCode, userId) {
