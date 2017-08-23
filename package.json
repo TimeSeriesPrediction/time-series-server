@@ -16,7 +16,8 @@
   "scripts": {
     "start": "set NODE_ENV=dev&&node index.js",
     "start-prod": "set NODE_ENV=prod&&node index.js",
-    "test": "set NODE_ENV=test&&nyc --reporter=lcov jasmine"
+    "test": "set NODE_ENV=test&&nyc --reporter=lcov jasmine",
+    "doc": "apidoc -i app/ -o apidoc/"
   },
   "repository": {
     "type": "git",
