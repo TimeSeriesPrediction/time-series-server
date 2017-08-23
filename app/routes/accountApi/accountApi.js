@@ -27,7 +27,7 @@ module.exports = function AccountApi({
     *     }
     */
     router.post('/token', function(req, res){
-        var username = req.body.username;
+        var username = req.body.userId;
         var password = req.body.password;
 
         if (!username || !password){
