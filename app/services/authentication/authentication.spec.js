@@ -125,7 +125,7 @@ describe('authentication service', function(){
 
         let user = {
             id: '123',
-            username: 'Testee',
+            userId: 'Testee',
             fullname: 'Tester Von Testacles',
             permissions: {}
         }

@@ -1,6 +1,6 @@
 var TokenSchema   = function (user, ipAddress){
       this.userId = user._id;
-      this.username = user.username;
+      this.username = user.userId;
       this.fullname = user.fullname;
       this.userPermissions = user.permissions;
       this.ipAddress = ipAddress;
