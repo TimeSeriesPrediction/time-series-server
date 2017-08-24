@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+<<<<<<< HEAD
 const questionSchema = require('../questionModel/questionModel');
+=======
+>>>>>>> origin/dev
 
 module.exports = function(){
 
@@ -9,6 +12,7 @@ module.exports = function(){
       type: String,
       required: true
     },
+<<<<<<< HEAD
     type: {
         type: String,
         required: true,
@@ -20,6 +24,20 @@ module.exports = function(){
   });
 
   return mongoose.model('Assessment', assessmentSchema);
-}
+=======
+    code: {
+      type: String,
+      unique: true,
+      index: true,
+      required: true,
+      uppercase: true
+    },
+    HOD: Schema.Types.ObjectId, 
+    enrollments: Schema.Types.Mixed,
+    assessments: Schema.Types.Mixed
+  });
 
+  return mongoose.model('Assessment', assessmentSchema);
+
+>>>>>>> origin/dev
 }
