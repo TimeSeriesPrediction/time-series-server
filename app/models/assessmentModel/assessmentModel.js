@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const questionSchema = require('../questionModel/questionModel');
 
 module.exports = function(){
 
@@ -15,11 +14,8 @@ module.exports = function(){
         enum:  ['Exam', 'Test', 'Assignment', 'Practical']
     },
     questions: [
-        questionSchema
     ]
   });
 
   return mongoose.model('Assessment', assessmentSchema);
-}
-
 }
