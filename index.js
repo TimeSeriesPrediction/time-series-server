@@ -22,6 +22,8 @@ const userModel = require('./app/models/userModel/userModel')({
     crypto: crypto
 });
 const moduleModel = require('./app/models/moduleModel/moduleModel')();
+const assessmentModel = require('./app/models/assessmentModel/assessmentModel')();
+const queryModel = require('./app/models/queryModel/queryModel')();
 
 //Get our business layer
 //services
@@ -37,7 +39,9 @@ const usersService = require('./app/data-services/usersService/usersService')({
 });
 const modulesService = require('./app/data-services/modulesService/modulesService')({
     moduleModel: moduleModel,
-    userModel: userModel
+    userModel: userModel,
+    assessmentModel: assessmentModel,
+    queryModel: queryModel
 });
 
 // Get our API layer

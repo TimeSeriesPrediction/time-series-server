@@ -3,7 +3,9 @@ const _ = require('underscore');
 
 module.exports = function({
     moduleModel,
-    userModel
+    userModel,
+    assessmentModel,
+    queryModel
 }) {
     return {
 
@@ -58,19 +60,15 @@ module.exports = function({
 
         getAssessmentsByModule: function(moduleCode, year) {
             var deferred = q.defer();
-            var y = "Y" + year;
             moduleModel
                 .findOne({code: moduleCode})
                 .select('assessments.Y' + year)
                 .exec((err, assessments) => {
-                        if(assessments)
-                            {
-                                deferred.resolve(assessments);
-
-                            }
-                            else{
-                                deferred.reject(err);
-                            }
+                        if(assessments) {
+                            deferred.resolve(assessments.assessments['Y' + year]);
+                        } else {
+                            deferred.reject(err);
+                        }
                     });
                
 
@@ -123,25 +121,36 @@ module.exports = function({
             return deferred.promise;
         },
 
-        addAssessment : function(moduleCode, year, assessment)
-        {
+        addAssessment : function(moduleCode, year, assessment) {
             var deferred = q.defer();
             let yearProp = 'Y' + year;
 
             moduleModel.findOne({ code: moduleCode} , function(err, mod) {
                 if(mod){
-                    if(!mod.assessments){
+                    if(!mod.assessments) {
                         mod.assessments = {};
                     }
                     var assessmentYear = mod.assessments[yearProp];
                     if(!assessmentYear){
                         mod.assessments[yearProp] = [];
-
                     }
-                    mod.assessments[yearProp].push(assessment);
-                    mod.markModified('assessments');
-                    mod.save();
-                    deferred.resolve();
+
+                    var newAssessment = new assessmentModel(assessment);
+                    newAssessment.validate(error => {
+                        if (error){
+                            deferred.reject(error);
+                            return;
+                        }
+                        mod.assessments[yearProp].push(newAssessment);
+                        mod.markModified('assessments');
+                        mod.save(error => {
+                            if (error) {
+                                deferred.reject(error);
+                            }
+
+                            deferred.resolve();
+                        });
+                    })
                 }
                 else {
                     deferred.reject();
@@ -151,24 +160,45 @@ module.exports = function({
              return deferred.promise;
         },
 
-        addQuery : function(moduleCode, year, number, query)
-        {
+        addQuery : function(moduleCode, year, number, query, userId) {
             var deferred = q.defer();
             let yearProp = 'Y' + year;
 
-           /* moduleModel.findOne({ code: moduleCode} , function(err, mod) {
+            moduleModel.findOne({ code: moduleCode} , function(err, mod) {
                 if(mod){
-                   
-                    mod.push(query);
-                    mod.markModified('queries');
-                    mod.save();
-                    deferred.resolve();
+                    try {
+                        if(!mod.assessments['Y' + year][number].queries) {
+                            mod.assessments['Y' + year][number].queries = [];
+                        }
+                    } catch (e) {
+                        deferred.reject();
+                    }
+                    
+                    var newQuery = new queryModel({
+                        userId: userId,
+                        message: query
+                    });
+                    newQuery.validate((error) => {
+                        if (error) {
+                            deferred.reject(error);
+                            return;
+                        }
+                        mod.assessments['Y' + year][number].queries.push(newQuery);
+                        mod.markModified('assessments');
+                        mod.save((error) => {
+                            if (error) {
+                                deferred.reject(error);
+                            } else {
+                                deferred.resolve();
+                            }
+                        });
+                    });
                 }
                 else {
                     deferred.reject();
                 }
                 
-            });*/
+            });
              return deferred.promise;
         },
 

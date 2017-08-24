@@ -169,7 +169,7 @@ module.exports = function ModulesApi ({
     * @apiParam {String} code module code
     * @apiParam {String} year module year
     * @apiParam {String} number assignment number
-    * @apiParam {Object}query the query object
+    * @apiParam {String} query the query message
     *
     * @apiSuccess (201) {Object}  response Response object
     * @apiSuccess (201) {String}  response.message Success message
@@ -185,7 +185,7 @@ module.exports = function ModulesApi ({
         var number = req.body.number;
         var query = req.body.query
 
-        modulesService.addQuery(code,year,number,query)
+        modulesService.addQuery(code,year,number,query, req.user.userId)
         .then(function(){
             res.data.message = 'Query added successfully';
             res.status(201).send(res.data);
