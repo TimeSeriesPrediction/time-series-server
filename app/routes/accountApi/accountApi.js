@@ -31,7 +31,7 @@ module.exports = function AccountApi({
         var password = req.body.password;
 
         if (!userId || !password){
-            res.status(401).send({ message: '/*Authorisation has been denied for this request'});
+            res.status(401).send({ message: 'Authorisation has been denied for this request'});
             return;
         }
     
@@ -48,7 +48,7 @@ module.exports = function AccountApi({
             }
         })
         .catch(function(){
-            res.status(401).send({ message: '****Authorisation has been denied for this request'});
+            res.status(401).send({ message: 'Authorisation has been denied for this request'});
         });
 
     });
