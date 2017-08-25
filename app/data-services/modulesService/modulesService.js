@@ -58,6 +58,23 @@ module.exports = function({
             return deferred.promise;
         },
 
+        getModulesByStudent: function(username, year) {
+            var deferred = q.defer();
+            
+            var objFind = {};
+            objFind["enrollments.Y" + year] = username;
+
+            moduleModel.find(objFind, (err, modules) => {
+                if (err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(modules);
+            });
+
+
+            return deferred.promise;
+        },
+
         getAssessmentsByModule: function(moduleCode, year) {
             var deferred = q.defer();
             moduleModel

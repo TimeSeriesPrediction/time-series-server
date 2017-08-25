@@ -26,7 +26,34 @@ module.exports = function ModulesApi ({
             res.status(200).send(res.data);
         })
         .catch(function(err){
-            res.status(500).send(err)
+            res.status(500).send(err);
+        });
+    });
+
+
+    /**
+    * @api {get} /modules/my-modules Get all enrolled modules for current student
+    * @apiName GetModules
+    * @apiGroup Modules
+    * @apiDescription Gets all modules from database
+    *
+    * @apiHeader (Authorization) {String} Authorization Authorization token
+    *
+    * @apiSuccess {Object[]}  modules Array of modules
+    * @apiSuccess {String}  modules._id DB Id
+    * @apiSuccess {String}  modules.name Name
+    * @apiSuccess {String}  modules.code Module Code
+    */
+    router.get('/my-modules/:year', (req, res) => {
+        var year = req.params.year;
+
+        modulesService.getModulesByStudent(req.user.username, year)
+        .then((modules) => {
+            res.data.modules = modules; 
+            res.status(200).send(res.data);
+        })
+        .catch((err) => {
+            res.status(500).send(err);
         });
     });
 

@@ -15,7 +15,7 @@ module.exports = function(){
       required: true,
       uppercase: true
     },
-    HOD: Schema.Types.ObjectId, 
+    HOD: { type: Schema.Types.ObjectId, ref: 'Users'}, 
     enrollments: Schema.Types.Mixed,
     assessments: Schema.Types.Mixed
   });
