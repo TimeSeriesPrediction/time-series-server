@@ -22,6 +22,10 @@ const userModel = require('./app/models/userModel/userModel')({
     crypto: crypto
 });
 const moduleModel = require('./app/models/moduleModel/moduleModel')();
+const questionSchema = require('./app/models/questionModel/questionModel')();
+const assessmentModel = require('./app/models/assessmentModel/assessmentModel')();
+const queryModel = require('./app/models/queryModel/queryModel')();
+const assessmentMarkModel = require('./app/models/assessmentMarkModel/assessmentMarkModel')();
 
 //Get our business layer
 //services
@@ -37,7 +41,13 @@ const usersService = require('./app/data-services/usersService/usersService')({
 });
 const modulesService = require('./app/data-services/modulesService/modulesService')({
     moduleModel: moduleModel,
-    userModel: userModel
+    userModel: userModel,
+    assessmentModel: assessmentModel,
+    queryModel: queryModel
+});
+
+const marksService = require('./app/data-services/marksService/marksService')({
+    assessmentMarkModel
 });
 
 // Get our API layer
@@ -55,6 +65,9 @@ const usersApi = require('./app/routes/usersApi/usersApi')({
 });
 const modulesApi = require('./app/routes/modulesApi/modulesApi')({
     modulesService: modulesService
+});
+const marksApi = require('./app/routes/marksApi/marksApi')({
+    marksService: marksService
 });
 
 const app = express();
@@ -82,6 +95,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/users',  usersApi);
 app.use('/account',  accountApi);
 app.use('/modules', authentication.authenticate, modulesApi);
+app.use('/marks', authentication.authenticate, marksApi);
 
 /**
  * Get port from environment and store in Express.

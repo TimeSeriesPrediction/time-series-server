@@ -8,18 +8,14 @@ module.exports = function(){
       type: String,
       required: true
     },
-    code: {
-      type: String,
-      unique: true,
-      index: true,
-      required: true,
-      uppercase: true
+    type: {
+        type: String,
+        required: true,
+        enum:  ['Exam', 'Test', 'Assignment', 'Practical']
     },
-    HOD: Schema.Types.ObjectId, 
-    enrollments: Schema.Types.Mixed,
-    assessments: Schema.Types.Mixed
+    questions: [
+    ]
   });
 
   return mongoose.model('Assessment', assessmentSchema);
-
 }
