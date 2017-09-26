@@ -3,7 +3,9 @@ const _ = require('underscore');
 
 module.exports = function({
     moduleModel,
-    userModel
+    userModel,
+    assessmentModel,
+    queryModel
 }) {
     return {
 
@@ -56,15 +58,36 @@ module.exports = function({
             return deferred.promise;
         },
 
+        getModulesByStudent: function(username, year) {
+            var deferred = q.defer();
+            
+            var objFind = {};
+            objFind["enrollments.Y" + year] = username;
+
+            moduleModel.find(objFind, (err, modules) => {
+                if (err) {
+                    deferred.reject(err);
+                }
+                deferred.resolve(modules);
+            });
+
+
+            return deferred.promise;
+        },
+
         getAssessmentsByModule: function(moduleCode, year) {
             var deferred = q.defer();
-
             moduleModel
                 .findOne({code: moduleCode})
                 .select('assessments.Y' + year)
                 .exec((err, assessments) => {
-                    //Get assessments from assessment ids
-                });
+                        if(assessments) {
+                            deferred.resolve(assessments.assessments['Y' + year]);
+                        } else {
+                            deferred.reject(err);
+                        }
+                    });
+               
 
             return deferred.promise;
         },
@@ -113,6 +136,87 @@ module.exports = function({
             });
 
             return deferred.promise;
+        },
+
+        addAssessment : function(moduleCode, year, assessment) {
+            var deferred = q.defer();
+            let yearProp = 'Y' + year;
+
+            moduleModel.findOne({ code: moduleCode} , function(err, mod) {
+                if(mod){
+                    if(!mod.assessments) {
+                        mod.assessments = {};
+                    }
+                    var assessmentYear = mod.assessments[yearProp];
+                    if(!assessmentYear){
+                        mod.assessments[yearProp] = [];
+                    }
+
+                    var newAssessment = new assessmentModel(assessment);
+                    newAssessment.validate(error => {
+                        if (error){
+                            deferred.reject(error);
+                            return;
+                        }
+                        mod.assessments[yearProp].push(newAssessment);
+                        mod.markModified('assessments');
+                        mod.save(error => {
+                            if (error) {
+                                deferred.reject(error);
+                            }
+
+                            deferred.resolve();
+                        });
+                    })
+                }
+                else {
+                    deferred.reject();
+                }
+                
+            });
+             return deferred.promise;
+        },
+
+        addQuery : function(moduleCode, year, number, query, userId) {
+            var deferred = q.defer();
+            let yearProp = 'Y' + year;
+
+            moduleModel.findOne({ code: moduleCode} , function(err, mod) {
+                if(mod){
+                    try {
+                        if(!mod.assessments['Y' + year][number].queries) {
+                            mod.assessments['Y' + year][number].queries = [];
+                        }
+                    } catch (e) {
+                        deferred.reject();
+                    }
+                    
+                    var newQuery = new queryModel({
+                        userId: userId,
+                        message: query
+                    });
+                    newQuery.validate((error) => {
+                        if (error) {
+                            deferred.reject(error);
+                            return;
+                        }
+                        mod.assessments['Y' + year][number].queries.push(newQuery);
+                        mod.markModified('assessments');
+                        mod.save((error) => {
+                            if (error) {
+                                deferred.reject(error);
+                            } else {
+                                deferred.resolve();
+                            }
+                        });
+                    });
+                }
+                else {
+                    deferred.reject();
+                }
+                
+            });
+             return deferred.promise;
         },
 
         updateHOD: function(moduleCode, userId) {

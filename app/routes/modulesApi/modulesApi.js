@@ -26,7 +26,34 @@ module.exports = function ModulesApi ({
             res.status(200).send(res.data);
         })
         .catch(function(err){
-            res.status(500).send(err)
+            res.status(500).send(err);
+        });
+    });
+
+
+    /**
+    * @api {get} /modules/my-modules Get all enrolled modules for current student
+    * @apiName GetModules
+    * @apiGroup Modules
+    * @apiDescription Gets all modules from database
+    *
+    * @apiHeader (Authorization) {String} Authorization Authorization token
+    *
+    * @apiSuccess {Object[]}  modules Array of modules
+    * @apiSuccess {String}  modules._id DB Id
+    * @apiSuccess {String}  modules.name Name
+    * @apiSuccess {String}  modules.code Module Code
+    */
+    router.get('/my-modules/:year', (req, res) => {
+        var year = req.params.year;
+
+        modulesService.getModulesByStudent(req.user.username, year)
+        .then((modules) => {
+            res.data.modules = modules; 
+            res.status(200).send(res.data);
+        })
+        .catch((err) => {
+            res.status(500).send(err);
         });
     });
 
@@ -92,7 +119,7 @@ module.exports = function ModulesApi ({
     });
 
     /**
-    * @api {get} /modules/students/:year/:code Gets assessments by module
+    * @api {get} /modules/assessments/:year/:code Gets assessments by module
     * @apiName GetAssessmentsByModule
     * @apiGroup Modules
     * @apiDescription  Gets all assessments for a module in a specific year
@@ -105,7 +132,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {Object[]}  assessments Module assessments
     * @apiSuccess {String}  assessments._id DB Id
     */
-    router.get('assessments/:year/:code', (req, res) => {
+    router.get('/assessments/:year/:code', (req, res) => {
         var year = req.params.year;
         var code = req.params.code;
 
@@ -158,7 +185,43 @@ module.exports = function ModulesApi ({
         });
     });
 
+    /**
+    * @api {post} /modules/query Adds a query 
+    * @apiName AddQuery
+    * @apiGroup Modules
+    * @apiDescription Adds a query to an assignment in the database
+    *
+    * @apiHeader (Authorization) {String} Authorization Authorization token
+    *
+    * @apiParam {String} code module code
+    * @apiParam {String} year module year
+    * @apiParam {String} number assignment number
+    * @apiParam {String} query the query message
+    *
+    * @apiSuccess (201) {Object}  response Response object
+    * @apiSuccess (201) {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 201 Created
+    *     {
+    *       "message": "Query added successfully"
+    *     }
+    */
+    router.post('/query', (req,res) => {
+        var year = req.body.year;
+        var code = req.body.code;
+        var number = req.body.number;
+        var query = req.body.query
 
+        modulesService.addQuery(code,year,number,query, req.user.userId)
+        .then(function(){
+            res.data.message = 'Query added successfully';
+            res.status(201).send(res.data);
+        })
+        .catch(function(error){
+            res.status(500).send(error);
+        });
+    });
+    
     /**
     * @api {put} /modules/enroll Enroll students
     * @apiName EnrollStudents
@@ -187,6 +250,41 @@ module.exports = function ModulesApi ({
         modulesService.enrollStudents(code, studentNrs, year)
         .then(function(){
             res.data.message = 'Students enrolled successfully';
+            res.status(200).send(res.data);
+        })
+        .catch(function(error){
+            res.status(500).send(error);
+        });
+    });
+
+    /**
+    * @api {put} /modules/assessment Add assessments
+    * @apiName AddAssessments
+    * @apiGroup Modules
+    * @apiDescription Adds an assessment to a module (existing)
+    *
+    * @apiHeader (Authorization) {String} Authorization Authorization token
+    *
+    * @apiParam {String} code module code
+    * @apiParam {Number} year year of enrollment
+    * @apiParam {Object} assessment The assessment json object to add
+    *
+    * @apiSuccess (201) {Object}  response Response object
+    * @apiSuccess (201) {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 201 Created
+    *     {
+    *       "message": "Assessment added successfully"
+    *     }
+    */
+    router.put('/assessment', (req, res) => {
+        var code = req.body.code;
+        var year = req.body.year;
+        var assessment = req.body.assessment;
+
+        modulesService.addAssessment(code, year, assessment)
+        .then(function(){
+            res.data.message = 'Assessment added successfully';
             res.status(200).send(res.data);
         })
         .catch(function(error){
