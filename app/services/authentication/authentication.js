@@ -28,7 +28,7 @@ module.exports = function Authentication({
 
           res.data.authToken = crypto.encrypt(JSON.stringify(new Token({
             _id: user.userId,
-            username: user.username,
+            userId: user.username,
             fullname: user.fullname,
             permissions: user.userPermissions,
             ipAddress: user.ipAddress
