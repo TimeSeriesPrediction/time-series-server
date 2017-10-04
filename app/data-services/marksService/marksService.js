@@ -2,41 +2,65 @@ const q = require('q');
 
 
 module.exports = function({
-    assessmentMarkModel
+    assessmentMarkModel,
+    moduleModel
 }) {
     return {
-        addAssessmentFinalMarks: (marks, assessmentId) => {
+        addAssessmentFinalMarks: (marks, moduleCode, assessmentId) => {
             var deferred = q.defer();
-            var newMarks = [];
+            var year = new Date().getFullYear();
 
-            for (var i = 0; i < marks.length; i++) {
-                var newMark = new assessmentMarkModel({
-                    userId: marks[i].userId,
-                    assessment: assessmentId,
-                    finalResult: marks[i].mark
+            moduleModel
+                .findOne({code: moduleCode})
+                .select('assessments.Y' + year)
+                .exec((err, assessments) => {
+                    if (!assessments || assessments.length) {
+                        deferred.reject({ message: 'assessment not found within this module'});
+                    }
+
+                    var newMarks = [];
+
+                    for (var i = 0; i < marks.length; i++) {
+                        var newMark = new assessmentMarkModel({
+                            userId: marks[i].userId,
+                            assessment: assessmentId,
+                            finalResult: marks[i].mark
+                        });
+                        newMarks.push(newMark);
+                    }
+
+                    assessmentMarkModel.collection.insertMany(newMarks, (err) => {
+                        if(err){
+                            deferred.reject(err);
+                        }
+                        deferred.resolve();
+                    });
                 });
-                newMarks.push(newMark);
-            }
-
-            assessmentMarkModel.collection.insertMany(newMarks, (err) => {
-                if(err){
-                    deferred.reject(err);
-                }
-                deferred.resolve();
-            });
 
             return deferred.promise;
         },
 
-        getMarksByAssessment: (assessmentId) => {
+        getMarksByAssessment: (code, assessmentId) => {
             var deferred = q.defer();
+            var year = new Date().getFullYear();
 
-            assessmentMarkModel.find({ assessment: assessmentId}, (err, marks) => {
-                if (err) {
-                    deferred.reject(err);
-                }
-                deferred.resolve(marks);
-            })
+            moduleModel
+                .findOne({code: code})
+                .select('assessments.Y' + year)
+                .exec((err, assessments) => {
+
+                    if (!assessments || assessments.length) {
+                        deferred.reject({ message: 'assessment not found within this module'});
+                    }
+
+                    assessmentMarkModel.find({ assessment: assessmentId }, (err, marks) => {
+                        if (err) {
+                            deferred.reject(err);
+                        }
+                        
+                        deferred.resolve(marks);
+                    })
+                });
 
             return deferred.promise;
         }

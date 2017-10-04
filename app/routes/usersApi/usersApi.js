@@ -3,7 +3,8 @@ const router = express.Router();
 
 module.exports = function UsersApi ({
     usersService,
-    authentication
+    authentication,
+    authorisation
 }){
 
     /**
@@ -21,7 +22,7 @@ module.exports = function UsersApi ({
     * @apiSuccess {String}  users.resetPasswordToken Password reset token
     * @apiSuccess {String}  users.resetPasswordExpires Password reset token expiry
     */
-    router.get('/',authentication.authenticate,  (req, res) => {
+    router.get('/',authentication.authenticate, authorisation.adminOnly,  (req, res) => {
         
         usersService.getUsers()
         .then(function(users){
@@ -70,7 +71,7 @@ module.exports = function UsersApi ({
     * @apiSuccess {String}  user.resetPasswordToken Password reset token
     * @apiSuccess {String}  user.resetPasswordExpires Password reset token expiry
     */
-    router.get('/:id',authentication.authenticate, (req, res) => {
+    router.get('/:id',authentication.authenticate, authorisation.adminOnly, (req, res) => {
         usersService.getUserById(req.params.id)
         .then(function(user){
             res.data.user = user;
@@ -99,12 +100,14 @@ module.exports = function UsersApi ({
     *       "message": "User created successfully"
     *     }
     */
-    router.post('/', (req, res) => {
+    router.post('/',   (req, res) => {
         var userId = req.body.userId;
         var password = req.body.password;
         var email = req.body.email;
+        var admin = req.body.admin;
+        var fullName = req.body.fullname;
 
-        usersService.addUser(userId, password, email)
+        usersService.addUser(userId, password, email, fullName, admin)
         .then(function(){
             res.data.message = 'User created successfully';
             res.status(201).send(res.data);
@@ -133,7 +136,7 @@ module.exports = function UsersApi ({
     *       "message": "Users created successfully"
     *     }
     */
-    router.post('/add-users', (req, res) => {
+    router.post('/add-users', authentication.authenticate, authorisation.adminOnly, (req, res) => {
         var users = req.body.users;
 
         usersService.addUsers(users)

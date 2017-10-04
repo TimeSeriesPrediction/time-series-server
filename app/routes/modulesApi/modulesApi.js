@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const constants = require('../../constants');
 
 module.exports = function ModulesApi ({
-    modulesService
+    modulesService,
+    authorisation
 }){
 
     /**
@@ -18,7 +20,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {String}  modules.name Name
     * @apiSuccess {String}  modules.code Module Code
     */
-    router.get('/', (req, res) => {
+    router.get('/', authorisation.adminOnly, (req, res) => {
         
         modulesService.getModules()
         .then(function(modules){
@@ -72,7 +74,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {String}  modules.name Name
     * @apiSuccess {String}  modules.code Module Code
     */
-    router.get('/:moduleCode',  (req, res) => {
+    router.get('/:moduleCode', authorisation.authorise('moduleCode', constants.PERMISSION_TYPE.STUDENT),  (req, res) => {
         modulesService.getModuleByCode(req.params.moduleCode)
         .then(function(mod) {
             res.status(200).json(mod);
@@ -99,7 +101,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {String}  students.userId student or staff number
     * @apiSuccess {String}  students.email user email
     */
-    router.get('/students/:year/:code', (req, res) => {
+    router.get('/students/:year/:code', authorisation.authorise('code', constants.PERMISSION_TYPE.ADMIN_VIEW), (req, res) => {
         var year = req.params.year;
         var code = req.params.code;
 
@@ -132,7 +134,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {Object[]}  assessments Module assessments
     * @apiSuccess {String}  assessments._id DB Id
     */
-    router.get('/assessments/:year/:code', (req, res) => {
+    router.get('/assessments/:year/:code', authorisation.authorise('code', constants.PERMISSION_TYPE.STUDENT), (req, res) => {
         var year = req.params.year;
         var code = req.params.code;
 
@@ -170,7 +172,7 @@ module.exports = function ModulesApi ({
     *       "message": "Module created successfully"
     *     }
     */
-    router.post('', (req,res) => {
+    router.post('', authorisation.adminOnly, (req,res) => {
         var name = req.body.name;
         var code = req.body.code;
         var hod = req.body.hod;
@@ -206,7 +208,7 @@ module.exports = function ModulesApi ({
     *       "message": "Query added successfully"
     *     }
     */
-    router.post('/query', (req,res) => {
+    router.post('/query', authorisation.authorise('code', constants.PERMISSION_TYPE.STUDENT), (req,res) => {
         var year = req.body.year;
         var code = req.body.code;
         var number = req.body.number;
@@ -242,7 +244,7 @@ module.exports = function ModulesApi ({
     *       "message": "Students enrolled successfully"
     *     }
     */
-    router.put('/enroll', (req, res) => {
+    router.put('/enroll', authorisation.authorise('code', constants.PERMISSION_TYPE.ADMIN_MANAGE), (req, res) => {
         var code = req.body.code;
         var year = req.body.year;
         var studentNrs = req.body.studentNrs;
@@ -277,7 +279,7 @@ module.exports = function ModulesApi ({
     *       "message": "Assessment added successfully"
     *     }
     */
-    router.put('/assessment', (req, res) => {
+    router.put('/assessment', authorisation.authorise('code', constants.PERMISSION_TYPE.ADMIN_MANAGE), (req, res) => {
         var code = req.body.code;
         var year = req.body.year;
         var assessment = req.body.assessment;
@@ -311,7 +313,7 @@ module.exports = function ModulesApi ({
     *       "message": "New HOD assigned"
     *     }
     */
-    router.put('/assign-hod', (req, res) => {
+    router.put('/assign-hod', authorisation.adminOnly, (req, res) => {
         var code = req.body.code;
         var staffNumber = req.body.staffNumber;
 
@@ -343,7 +345,7 @@ module.exports = function ModulesApi ({
     *       "message": "Module removed"
     *     }
     */
-    router.delete('', (req, res) => {
+    router.delete('', authorisation.adminOnly, (req, res) => {
         var code = req.query.code;
 
         modulesService.removeModule(code)

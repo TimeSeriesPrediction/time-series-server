@@ -53,6 +53,5 @@ module.exports = function Authentication({
 
           return deferred.promise;
       }
-
     }
 }

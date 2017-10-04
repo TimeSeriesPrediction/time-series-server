@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const constants = require('../../constants');
 
 module.exports = function ModulesApi ({
-    marksService
+    marksService,
+    authorisation
 }){
     /**
     * @api {get} /marks/:assessmentId Gets marks by assessment
@@ -12,6 +14,7 @@ module.exports = function ModulesApi ({
     *
     * @apiHeader (Authorization) {String} Authorization Authorization token
     *
+    * @apiParam {String} code The module code for the assessment
     * @apiParam {String} assessmentId The object id of the assessment
     *
     * @apiSuccess {Object[]}  marks Module assessments
@@ -20,10 +23,11 @@ module.exports = function ModulesApi ({
     * @apiSuccess {Object[]}  marks.questionResults Nested question results
     * @apiSuccess {Number}  marks.finalResult Final result of assessment
     */
-    router.get('/:assessmentId', (req, res) => {
+    router.get('/:code/:assessmentId', authorisation.authorise('code', constants.PERMISSION_TYPE.ADMIN_VIEW), (req, res) => {
         var assessmentId = req.params.assessmentId;
+        var code = req.params.code;
 
-        marksService.getMarksByAssessment(assessmentId)
+        marksService.getMarksByAssessment(code, assessmentId)
         .then(function(marks) {
             res.data.marks = marks;
             res.status(200).send(res.data);
@@ -45,6 +49,7 @@ module.exports = function ModulesApi ({
     * @apiParam {String} marks.userId The student number
     * @apiParam {String} marks.mark The student's final mark for this assessment
     * @apiParam {String} assessmentId The assessment id to mark
+    * @apiParam {String} moduleCode The module code associated with the assessment
     *
     * @apiSuccess (201) {Object}  response Response object
     * @apiSuccess (201) {String}  response.message Success message
@@ -54,11 +59,12 @@ module.exports = function ModulesApi ({
     *       "message": "Marks added successfully"
     *     }
     */
-    router.post('', (req,res) => {
+    router.post('', authorisation.authorise('moduleCode', constants.PERMISSION_TYPE.ADMIN_EDIT), (req,res) => {
         var marks = req.body.marks;
         var assessmentId = req.body.assessmentId;
+        var moduleCode = req.body.moduleCode;
 
-        marksService.addAssessmentFinalMarks(marks, assessmentId)
+        marksService.addAssessmentFinalMarks(marks, moduleCode, assessmentId)
         .then(function(){
             res.data.message = 'Marks added successfully';
             res.status(201).send(res.data);
