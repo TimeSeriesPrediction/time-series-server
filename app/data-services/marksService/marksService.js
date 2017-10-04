@@ -14,7 +14,7 @@ module.exports = function({
                 .findOne({code: moduleCode})
                 .select('assessments.Y' + year)
                 .exec((err, assessments) => {
-                    if (!assessments || assessments.length) {
+                    if (!assessments || assessments.length || !_.findWhere(assessments, {_id: assessmentId})) {
                         deferred.reject({ message: 'assessment not found within this module'});
                     }
 
@@ -49,7 +49,7 @@ module.exports = function({
                 .select('assessments.Y' + year)
                 .exec((err, assessments) => {
 
-                    if (!assessments || assessments.length) {
+                    if (!assessments || assessments.length || !_.findWhere(assessments, {_id: assessmentId})) { 
                         deferred.reject({ message: 'assessment not found within this module'});
                     }
 
