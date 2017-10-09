@@ -1,8 +1,7 @@
 var TokenSchema   = function (user, ipAddress){
-      this.userId = user._id;
-      this.username = user.userId;
+      this.username = user.username;
       this.fullname = user.fullname;
-      this.userPermissions = user.permissions;
+      this.permissions = user.permissions;
       this.ipAddress = ipAddress;
 
       var expiryOneHour = new Date();

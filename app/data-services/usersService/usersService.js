@@ -4,17 +4,24 @@ const NotFoundException = require('../../models/exceptions/NotFoundException');
 
 module.exports = function({
     userModel,
+    UserViewModel,
     crypto
 }) {
     return {
-
         getAuthenticatedUser: function(userId, password){
             var deferred = q.defer();
 
             userModel.findOne({userId: userId}, (err, user) => {
                 if (user) {
                     user.verifyPassword(password).then(function(){
-                        deferred.resolve(user);
+                        var userViewModel = new UserViewModel({
+                            username: user.userId,
+                            fullname: user.fullname,
+                            email: user.email,
+                            permissions: user.permissions
+                        });
+
+                        deferred.resolve(userViewModel);
                     })
                     .catch(function(){
                         deferred.reject();
@@ -112,7 +119,7 @@ module.exports = function({
             return deferred.promise;
         },
 
-        addUser: function(userId, password, email){
+        addUser: function(userId, password, email, fullName, admin){
             var deferred = q.defer();
 
             crypto.getSalt().then(function(salt){
@@ -120,7 +127,12 @@ module.exports = function({
                     let user = new userModel({
                         userId: userId,
                         password: hash,
-                        email: email
+                        email: email,
+                        fullname: fullName,
+                        permissions: {
+                            admin: admin,
+                            modules: []
+                        }
                     });
 
                     user.save(error => {
@@ -153,7 +165,11 @@ module.exports = function({
                         let user = new userModel({
                             username: userToAdd.username,
                             password: hash,
-                            email: userToAdd.email
+                            email: userToAdd.email,
+                            permissions: {
+                                admin: false,
+                                modules: []
+                            }
                         });
 
                         if (user.validate()){

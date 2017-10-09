@@ -21,6 +21,7 @@ const mailer = require('./app/utilities/mailer/mailer')();
 const userModel = require('./app/models/userModel/userModel')({
     crypto: crypto
 });
+const UserViewModel = require('./app/models/userViewModel/userViewModel')();
 const moduleModel = require('./app/models/moduleModel/moduleModel')();
 const questionSchema = require('./app/models/questionModel/questionModel')();
 const assessmentModel = require('./app/models/assessmentModel/assessmentModel')();
@@ -37,6 +38,7 @@ const emailService = require('./app/data-services/emailService/emailService')({
 
 const usersService = require('./app/data-services/usersService/usersService')({
     userModel: userModel,
+    UserViewModel: UserViewModel,
     crypto: crypto
 });
 const modulesService = require('./app/data-services/modulesService/modulesService')({
@@ -54,6 +56,7 @@ const marksService = require('./app/data-services/marksService/marksService')({
 const authentication = require('./app/services/authentication/authentication')({
     crypto: crypto
 });
+const authorisation = require('./app/services/authorisation/authorisation')();
 const accountApi = require('./app/routes/accountApi/accountApi')({
     emailService: emailService,
     usersService: usersService,
@@ -61,13 +64,16 @@ const accountApi = require('./app/routes/accountApi/accountApi')({
 });
 const usersApi = require('./app/routes/usersApi/usersApi')({
     usersService: usersService,
-    authentication: authentication
+    authentication: authentication,
+    authorisation: authorisation
 });
 const modulesApi = require('./app/routes/modulesApi/modulesApi')({
-    modulesService: modulesService
+    modulesService: modulesService,
+    authorisation: authorisation
 });
 const marksApi = require('./app/routes/marksApi/marksApi')({
-    marksService: marksService
+    marksService: marksService,
+    authorisation: authorisation
 });
 
 const app = express();
@@ -80,12 +86,6 @@ app.use((req, res, next) => {
 
 // Adds cross origin support between client and server
 app.use(cors());
-
-//Sets up response data object for use in other middleware
-app.use((req, res, next) => {
-    res.data = {};
-    next();
-})
 
 // Parsers for POST data
 app.use(bodyParser.json());

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 const q = require('q');
 const constants = require('../../constants');
 
@@ -14,6 +15,10 @@ module.exports = function({
       required: true,
       index: true
     },
+    fullname: {
+      type: String,
+      required: true
+    },
     password: {
       type: String,
       required: true
@@ -22,6 +27,15 @@ module.exports = function({
       type: String,
       unique: true,
       required: true
+    },
+    permissions: {
+        admin: { type: Schema.Types.Boolean, required: true },
+        modules: [
+            {
+                moduleCode: { type: String, required: true},
+                permission: { type: Number, required: true}
+            }
+        ]
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date

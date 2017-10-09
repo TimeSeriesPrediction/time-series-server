@@ -1,5 +1,6 @@
 const q = require('q');
 const _ = require('underscore');
+const constants = require('../../constants');
 
 module.exports = function({
     moduleModel,
@@ -135,6 +136,15 @@ module.exports = function({
                 }
             });
 
+            userModel.find({ userId: { $in: userIds } }).update({ 
+                $addToSet: {
+                    'permissions.modules': {
+                        moduleCode: moduleCode,
+                        permission: constants.PERMISSION_TYPE.STUDENT
+                    }
+                }
+            }).exec();;
+
             return deferred.promise;
         },
 
@@ -230,6 +240,15 @@ module.exports = function({
                 }
                 else {
                     deferred.reject();
+                }
+            });
+
+            userModel.find({ userId: userId }).update({ 
+                $addToSet: {
+                    'permissions.modules': {
+                        moduleCode: moduleCode,
+                        permission: constants.PERMISSION_TYPE.ADMIN_MANAGE
+                    }
                 }
             });
 
