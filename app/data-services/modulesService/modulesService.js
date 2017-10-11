@@ -46,7 +46,7 @@ module.exports = function({
                 .findOne({code: moduleCode})
                 .select('enrollments.Y' + year)
                 .exec((err, students) => {
-                    userModel.find({ userId: { $in: students.enrollments['Y' + year] }}, (err, users) => {
+                    userModel.find({ username: { $in: students.enrollments['Y' + year] }}, (err, users) => {
                         if (users) {
                             deferred.resolve(users);
                         }
