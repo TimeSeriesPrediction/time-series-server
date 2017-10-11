@@ -27,15 +27,15 @@ module.exports = function AccountApi({
     *     }
     */
     router.post('/token', function(req, res){
-        var userId = req.body.userId;
+        var username = req.body.username;
         var password = req.body.password;
 
-        if (!userId || !password){
+        if (!username || !password){
             res.status(401).send({ message: 'Authorisation has been denied for this request'});
             return;
         }
     
-        usersService.getAuthenticatedUser(userId, password)
+        usersService.getAuthenticatedUser(username, password)
         .then(function(user){
             if (user){
                 var ip = requestIp.getClientIp(req);

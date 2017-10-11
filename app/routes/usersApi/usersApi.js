@@ -101,13 +101,13 @@ module.exports = function UsersApi ({
     *     }
     */
     router.post('/',   (req, res) => {
-        var userId = req.body.userId;
+        var username = req.body.username;
         var password = req.body.password;
         var email = req.body.email;
         var admin = req.body.admin;
         var fullName = req.body.fullname;
 
-        usersService.addUser(userId, password, email, fullName, admin)
+        usersService.addUser(username, password, email, fullName, admin)
         .then(function(){
             res.data.message = 'User created successfully';
             res.status(201).send(res.data);

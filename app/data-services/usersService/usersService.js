@@ -8,14 +8,14 @@ module.exports = function({
     crypto
 }) {
     return {
-        getAuthenticatedUser: function(userId, password){
+        getAuthenticatedUser: function(username, password){
             var deferred = q.defer();
 
-            userModel.findOne({userId: userId}, (err, user) => {
+            userModel.findOne({username: username}, (err, user) => {
                 if (user) {
                     user.verifyPassword(password).then(function(){
                         var userViewModel = new UserViewModel({
-                            username: user.userId,
+                            username: user.username,
                             fullname: user.fullname,
                             email: user.email,
                             permissions: user.permissions
@@ -119,13 +119,13 @@ module.exports = function({
             return deferred.promise;
         },
 
-        addUser: function(userId, password, email, fullName, admin){
+        addUser: function(username, password, email, fullName, admin){
             var deferred = q.defer();
 
             crypto.getSalt().then(function(salt){
                 crypto.hash(password, salt).then(function(hash){
                     let user = new userModel({
-                        userId: userId,
+                        username: username,
                         password: hash,
                         email: email,
                         fullname: fullName,
