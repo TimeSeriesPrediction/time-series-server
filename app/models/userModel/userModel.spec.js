@@ -22,7 +22,7 @@ describe('user model', function(){
 
         it ('should be invalid if username is empty', function(done){
             user.validate(function(error) {
-                expect(error.errors.userId).toBeDefined();
+                expect(error.errors.username).toBeDefined();
                 done();
             });
         });
