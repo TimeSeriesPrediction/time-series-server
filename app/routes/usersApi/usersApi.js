@@ -91,6 +91,8 @@ module.exports = function UsersApi ({
     * @apiParam {String} username New user's username
     * @apiParam {String} password New user's password
     * @apiParam {String} email New user's email
+    * @apiParma {Boolean} admin Is user admin
+    * @apiParam {String} fullname New user's fullname
     *
     * @apiSuccess (201) {Object}  response Response object
     * @apiSuccess (201) {String}  response.message Success message
