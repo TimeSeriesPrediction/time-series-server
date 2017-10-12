@@ -26,7 +26,6 @@ const moduleModel = require('./app/models/moduleModel/moduleModel')();
 const questionSchema = require('./app/models/questionModel/questionModel')();
 const assessmentModel = require('./app/models/assessmentModel/assessmentModel')();
 const queryModel = require('./app/models/queryModel/queryModel')();
-const assessmentMarkModel = require('./app/models/assessmentMarkModel/assessmentMarkModel')();
 
 //Get our business layer
 //services
@@ -49,7 +48,7 @@ const modulesService = require('./app/data-services/modulesService/modulesServic
 });
 
 const marksService = require('./app/data-services/marksService/marksService')({
-    assessmentMarkModel
+    moduleModel
 });
 
 // Get our API layer
@@ -73,6 +72,7 @@ const modulesApi = require('./app/routes/modulesApi/modulesApi')({
 });
 const marksApi = require('./app/routes/marksApi/marksApi')({
     marksService: marksService,
+    moduleModel: moduleModel,
     authorisation: authorisation
 });
 

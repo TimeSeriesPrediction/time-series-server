@@ -165,6 +165,7 @@ module.exports = function({
                         let user = new userModel({
                             username: userToAdd.username,
                             password: hash,
+                            fullname: userToAdd.fullname,
                             email: userToAdd.email,
                             permissions: {
                                 admin: false,
