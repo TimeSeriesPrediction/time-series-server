@@ -1,14 +1,3 @@
-engines:
-  eslint:
-    enabled: true
-  csslint:
-    enabled: true
-  duplication:
-    enabled: false
-    config:
-      languages:
-      - javascript:
-
 languages:
   JavaScript: true
 

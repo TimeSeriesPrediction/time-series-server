@@ -13,7 +13,21 @@ module.exports = function(){
         required: true,
         enum:  ['Exam', 'Test', 'Assignment', 'Practical']
     },
-    questions: [
+    deadline: {
+      type: Date,
+      required: true
+    },
+    link: String,
+    marks: [
+      {
+        username: {
+           type: Schema.Types.ObjectId, 
+           ref: 'Users.username'
+        },
+        mark: {
+          type: Number
+        }
+      }
     ]
   });
 

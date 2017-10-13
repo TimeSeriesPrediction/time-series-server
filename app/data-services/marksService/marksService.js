@@ -1,8 +1,9 @@
 const q = require('q');
+const _ = require('underscore');
+var ObjectID = require('mongodb').ObjectID
 
 
 module.exports = function({
-    assessmentMarkModel,
     moduleModel
 }) {
     return {
@@ -13,27 +14,44 @@ module.exports = function({
             moduleModel
                 .findOne({code: moduleCode})
                 .select('assessments.Y' + year)
-                .exec((err, assessments) => {
-                    if (!assessments || assessments.length || !_.findWhere(assessments, {_id: assessmentId})) {
-                        deferred.reject({ message: 'assessment not found within this module'});
+                .exec((err, mod) => {
+                    if (!mod) {
+                        return deferred.reject({ message: 'Module does not exist.'});  
+                    }
+
+                    var assessment = _.find(mod.assessments['Y' + year], (assessment) => {
+                        return assessment._id.equals(ObjectID(assessmentId));
+                    } );
+
+                    if (!assessment) {
+                        return deferred.reject({ message: 'Assessment not found within this module.'});
                     }
 
                     var newMarks = [];
 
+
+                    assessment.marks = [];
+
+
                     for (var i = 0; i < marks.length; i++) {
-                        var newMark = new assessmentMarkModel({
-                            userId: marks[i].userId,
-                            assessment: assessmentId,
-                            finalResult: marks[i].mark
-                        });
-                        newMarks.push(newMark);
+                        var oldMark = _.findWhere(assessment.marks, { username: marks[i].username });
+                        if (!oldMark) {
+                            assessment.marks.push({
+                                username: marks[i].username,
+                                mark: marks[i].mark
+                            });
+                        }
+                        else {
+                            oldMark.mark = marks[i].mark;
+                        }
                     }
 
-                    assessmentMarkModel.collection.insertMany(newMarks, (err) => {
-                        if(err){
-                            deferred.reject(err);
+                    mod.markModified('assessments.Y' + year);
+                    mod.save((err) => {
+                        if (err) {
+                            return deferred.reject(err);
                         }
-                        deferred.resolve();
+                        return deferred.resolve();
                     });
                 });
 
@@ -47,19 +65,21 @@ module.exports = function({
             moduleModel
                 .findOne({code: code})
                 .select('assessments.Y' + year)
-                .exec((err, assessments) => {
+                .exec((err, mod) => {
 
-                    if (!assessments || assessments.length || !_.findWhere(assessments, {_id: assessmentId})) { 
-                        deferred.reject({ message: 'assessment not found within this module'});
+                    if (!mod) {
+                        deferred.reject({ message: 'Module does not exist.'});  
                     }
 
-                    assessmentMarkModel.find({ assessment: assessmentId }, (err, marks) => {
-                        if (err) {
-                            deferred.reject(err);
-                        }
-                        
-                        deferred.resolve(marks);
-                    })
+                    var assessment = _.find(mod.assessments['Y' + year], (assessment) => {
+                        return assessment._id.equals(ObjectID(assessmentId));
+                    } );
+
+                    if (!assessment) {
+                        deferred.reject({ message: 'Assessment not found within this module.'});
+                    }
+
+                    deferred.resolve(assessment.marks);
                 });
 
             return deferred.promise;
