@@ -1,4 +1,6 @@
+import os
 import sys
+
 import numpy
 import pandas
 import matplotlib.pyplot as plt
@@ -170,8 +172,12 @@ def plot_data(dataset: numpy.ndarray, look_back: int, training_prediction: numpy
     axes = plt.gca()
 
     # Sets the axis title
-    plt.title('Predicted Marks Average')
-    plt.ylabel('Student Mark')
+    if sys.argv[2] == "1":
+        plt.title('Predicted Marks Average for Student')
+        plt.ylabel('Student Mark')
+    else:
+        plt.title('Predicted Marks Average for Module')
+        plt.ylabel('Average Student Marks')
 
     # Set the ticks for the y axis and remove x ticks
     axes.set_ylim([0,100])

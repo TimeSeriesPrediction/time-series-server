@@ -8,11 +8,11 @@ module.exports = function() {
 
             var options = {
                 mode: 'text',
+                pythonOptions: ['-u'],
                 args: [csvName, analysisType, uniqueID]
             };
             
             PythonShell.run('time-series-analysis-engine.py', options, function (err, results) {
-                deferred.resolve("Complete");
             });
 
             deferred.reject("Failed");

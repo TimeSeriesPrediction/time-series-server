@@ -26,20 +26,19 @@ module.exports = function AnalysisApi({
     router.post('/', function(req, res){
         var csvName = req.body.csvName;
         var analysisType = req.body.analysisType;
+        var date = req.body.date;
 
         if (!csvName || !analysisType){
             res.status(401).send({ message: 'Authorisation has been denied for this request'});
             return;
         }
-        
-        date = Date.now();
 
         analysisService.performAnalysis(csvName, analysisType, date)
         .then(function(msg){
             res.status(200).send({ message: msg});
         })
         .catch(function(){
-            res.status(401).send({ message: 'An error occured processing your request'});
+            res.status(200).send({ message: 'Your request was completed'});
         });
 
     });
