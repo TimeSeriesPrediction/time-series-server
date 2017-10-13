@@ -52,6 +52,8 @@ const marksService = require('./app/data-services/marksService/marksService')({
     assessmentMarkModel
 });
 
+const analysisService = require('./app/data-services/analysisService/analysisService')();
+
 // Get our API layer
 const authentication = require('./app/services/authentication/authentication')({
     crypto: crypto
@@ -75,6 +77,9 @@ const marksApi = require('./app/routes/marksApi/marksApi')({
     marksService: marksService,
     authorisation: authorisation
 });
+const analysisApi = require('./app/routes/analysisApi/analysisApi')({
+    analysisService: analysisService
+});
 
 const app = express();
 
@@ -96,6 +101,7 @@ app.use('/users',  usersApi);
 app.use('/account',  accountApi);
 app.use('/modules', authentication.authenticate, modulesApi);
 app.use('/marks', authentication.authenticate, marksApi);
+app.use('/analysis', analysisApi);
 
 /**
  * Get port from environment and store in Express.
