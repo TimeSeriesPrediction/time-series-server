@@ -136,14 +136,20 @@ module.exports = function({
                 }
             });
 
-            userModel.find({ userId: { $in: userIds } }).update({ 
+            userModel.find({ username: { $in: userIds } }).update({ 
                 $addToSet: {
                     'permissions.modules': {
                         moduleCode: moduleCode,
                         permission: constants.PERMISSION_TYPE.STUDENT
                     }
                 }
-            }).exec();;
+            }).exec((err) => {
+                        if(err) {
+                            deferred.reject(err);
+                        } else {
+                            deferred.resolve();
+                        }
+                    });
 
             return deferred.promise;
         },
@@ -187,7 +193,7 @@ module.exports = function({
              return deferred.promise;
         },
 
-        addQuery : function(moduleCode, year, number, query, userId) {
+        addQuery : function(moduleCode, year, number, query, username) {
             var deferred = q.defer();
             let yearProp = 'Y' + year;
 
@@ -202,7 +208,7 @@ module.exports = function({
                     }
                     
                     var newQuery = new queryModel({
-                        userId: userId,
+                        username: username,
                         message: query
                     });
                     newQuery.validate((error) => {
@@ -229,12 +235,12 @@ module.exports = function({
              return deferred.promise;
         },
 
-        updateHOD: function(moduleCode, userId) {
+        updateHOD: function(moduleCode, username) {
             var deferred = q.defer();
 
             moduleModel.findOne({ code: moduleCode} , function(err, mod) {
                 if (mod) {
-                    mod.HOD = mongoose.Types.ObjectId(userId);
+                    mod.HOD = mongoose.Types.ObjectId(username);
                     mod.save();
                     deferred.resolve();
                 }
@@ -243,14 +249,14 @@ module.exports = function({
                 }
             });
 
-            userModel.find({ userId: userId }).update({ 
+            userModel.find({ username: username }).update({ 
                 $addToSet: {
                     'permissions.modules': {
                         moduleCode: moduleCode,
                         permission: constants.PERMISSION_TYPE.ADMIN_MANAGE
                     }
                 }
-            });
+            }).exec();
 
             return deferred.promise;
         },
@@ -266,6 +272,27 @@ module.exports = function({
                     deferred.reject();
                 }
             });
+
+            return deferred.promise;
+        },
+
+        addStaff: function(moduleCode, username, permission) {
+            var deferred = q.defer();
+
+            userModel.findOne({ username: username }).update({ 
+                $addToSet: {
+                    'permissions.modules': {
+                        moduleCode: moduleCode,
+                        permission: permission
+                    }
+                }
+            }).exec((err) => {
+                        if(err) {
+                            deferred.reject(err);
+                        } else {
+                            deferred.resolve();
+                        }
+                    });
 
             return deferred.promise;
         }

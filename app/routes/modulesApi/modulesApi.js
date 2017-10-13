@@ -98,7 +98,7 @@ module.exports = function ModulesApi ({
     *
     * @apiSuccess {Object[]}  students Enrolled Students
     * @apiSuccess {String}  students._id DB Id
-    * @apiSuccess {String}  students.userId student or staff number
+    * @apiSuccess {String}  students.username student or staff number
     * @apiSuccess {String}  students.email user email
     */
     router.get('/students/:year/:code', authorisation.authorise('code', constants.PERMISSION_TYPE.ADMIN_VIEW), (req, res) => {
@@ -214,7 +214,7 @@ module.exports = function ModulesApi ({
         var number = req.body.number;
         var query = req.body.query
 
-        modulesService.addQuery(code,year,number,query, req.user.userId)
+        modulesService.addQuery(code,year,number,query, req.user.username)
         .then(function(){
             res.data.message = 'Query added successfully';
             res.status(201).send(res.data);
@@ -354,6 +354,39 @@ module.exports = function ModulesApi ({
             res.status(200).send(res.data);
         })
         .catch(function(error){
+            res.status(500).send(error);
+        });
+    });
+
+    /**
+    * @api {post} /modules/add-users Add staff to a module
+    * @apiName AddStaff
+    * @apiGroup Modules
+    * @apiDescription Adds a staff member to a module
+    *
+    * @apiParam {String} username New staff member's username
+    * @apiParam {String} permission New staff member's permission level
+    * @apiParam {String} moduleCode moduleCode
+    *
+    * @apiSuccess (201) {Object}  response Response object
+    * @apiSuccess (201) {String}  response.message Success message
+    * @apiSuccessExample {json} Success-Response:
+    *     HTTP/1.1 201 Created
+    *     {
+    *       "message": "Staff added successfully"
+    *     }
+    */
+    router.post('/add-staff', authorisation.authorise('moduleCode', constants.PERMISSION_TYPE.ADMIN_MANAGE), (req, res) => {
+        var moduleCode = req.body.moduleCode;
+        var permission = req.body.permission;
+        var username = req.body.username;
+
+        modulesService.addStaff(moduleCode, username, permission)
+        .then(function() {
+            res.data.message = 'Staff added successfully';
+            res.status(201).send(res.data);
+        })
+        .catch(function(error) {
             res.status(500).send(error);
         });
     });
