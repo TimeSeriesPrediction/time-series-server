@@ -105,10 +105,10 @@ module.exports = function({
             return deferred.promise;
         },
 
-        getUserById: function(id){
+        getUserById: function(username){
             var deferred = q.defer();
 
-            userModel.findOne({userId: id}, (err, users) => {
+            userModel.findOne({username: username}, (err, users) => {
                 if (err) {
                     deferred.reject(err)
                 }

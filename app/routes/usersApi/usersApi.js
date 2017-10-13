@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const constants = require('../../constants');
 
 module.exports = function UsersApi ({
     usersService,
