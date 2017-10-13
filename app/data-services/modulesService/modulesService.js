@@ -279,20 +279,36 @@ module.exports = function({
         addStaff: function(moduleCode, username, permission) {
             var deferred = q.defer();
 
-            userModel.findOne({ username: username }).update({ 
-                $addToSet: {
-                    'permissions.modules': {
-                        moduleCode: moduleCode,
-                        permission: permission
-                    }
+            userModel.findOne({ username: username }, (err, user) => {
+                if (err) {
+                    return deferred.reject(err);
                 }
-            }).exec((err) => {
-                        if(err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve();
+                if (user) {
+                    var modulePermissions = _.where(user.permissions.modules, { moduleCode: moduleCode});
+
+                    if (modulePermissions.length > 0) {
+                        for (var i = 0; i < modulePermissions.length; i++) {
+                            modulePermissions[i].permission = permission;
                         }
+                    }
+                    else {
+                        user.permissions.modules.push({
+                            moduleCode: moduleCode,
+                            permission: permission
+                        })
+                    }
+                    user.save((err)=> {
+                        if (err) {
+                            return deferred.reject();
+                        }
+                        return deferred.resolve();
                     });
+
+                }
+                else {
+                    deferred.reject({message: 'User does not exist'});
+                }
+            });
 
             return deferred.promise;
         }
