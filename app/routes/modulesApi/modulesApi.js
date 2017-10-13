@@ -77,7 +77,8 @@ module.exports = function ModulesApi ({
     router.get('/:moduleCode', authorisation.authorise('moduleCode', constants.PERMISSION_TYPE.STUDENT),  (req, res) => {
         modulesService.getModuleByCode(req.params.moduleCode)
         .then(function(mod) {
-            res.status(200).json(mod);
+            res.data.module = mod;
+            res.status(200).json(res.data);
         })
         .catch(function(err){
             res.status(500).send(err)
