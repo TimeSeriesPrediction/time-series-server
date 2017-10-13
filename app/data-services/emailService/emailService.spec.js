@@ -27,7 +27,7 @@ describe('Email Service', function() {
             expect(mockMailer.sendMail.calls.mostRecent().args[0]).toMatch(/test@email.com/);
             expect(mockMailer.sendMail.calls.mostRecent().args[1]).toMatch(/Password Reset Email/);
             expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/http/);
-            expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/\/account\/reset\?\=\*T0K3N\*/);
+            expect(mockMailer.sendMail.calls.mostRecent().args[2]).toMatch(/\/account\/reset\?token\=\*T0K3N\*/);
         });
     
     })
