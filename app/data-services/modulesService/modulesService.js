@@ -136,7 +136,7 @@ module.exports = function({
                 }
             });
 
-            userModel.find({ username: { $in: userIds } }).update({ 
+            userModel.find({ username: { $in: userIds } }).updateMany({ 
                 $addToSet: {
                     'permissions.modules': {
                         moduleCode: moduleCode,
