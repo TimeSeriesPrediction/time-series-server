@@ -136,14 +136,20 @@ module.exports = function({
                 }
             });
 
-            userModel.find({ userId: { $in: userIds } }).update({ 
+            userModel.find({ username: { $in: userIds } }).update({ 
                 $addToSet: {
                     'permissions.modules': {
                         moduleCode: moduleCode,
                         permission: constants.PERMISSION_TYPE.STUDENT
                     }
                 }
-            }).exec();;
+            }).exec((err) => {
+                        if(err) {
+                            deferred.reject(err);
+                        } else {
+                            deferred.resolve();
+                        }
+                    });
 
             return deferred.promise;
         },
@@ -187,7 +193,7 @@ module.exports = function({
              return deferred.promise;
         },
 
-        addQuery : function(moduleCode, year, number, query, userId) {
+        addQuery : function(moduleCode, year, number, query, username) {
             var deferred = q.defer();
             let yearProp = 'Y' + year;
 
@@ -202,7 +208,7 @@ module.exports = function({
                     }
                     
                     var newQuery = new queryModel({
-                        userId: userId,
+                        username: username,
                         message: query
                     });
                     newQuery.validate((error) => {
@@ -229,12 +235,12 @@ module.exports = function({
              return deferred.promise;
         },
 
-        updateHOD: function(moduleCode, userId) {
+        updateHOD: function(moduleCode, username) {
             var deferred = q.defer();
 
             moduleModel.findOne({ code: moduleCode} , function(err, mod) {
                 if (mod) {
-                    mod.HOD = mongoose.Types.ObjectId(userId);
+                    mod.HOD = mongoose.Types.ObjectId(username);
                     mod.save();
                     deferred.resolve();
                 }
@@ -243,14 +249,14 @@ module.exports = function({
                 }
             });
 
-            userModel.find({ userId: userId }).update({ 
+            userModel.find({ username: username }).update({ 
                 $addToSet: {
                     'permissions.modules': {
                         moduleCode: moduleCode,
                         permission: constants.PERMISSION_TYPE.ADMIN_MANAGE
                     }
                 }
-            });
+            }).exec();
 
             return deferred.promise;
         },
@@ -264,6 +270,43 @@ module.exports = function({
                 }
                 else {
                     deferred.reject();
+                }
+            });
+
+            return deferred.promise;
+        },
+
+        addStaff: function(moduleCode, username, permission) {
+            var deferred = q.defer();
+
+            userModel.findOne({ username: username }, (err, user) => {
+                if (err) {
+                    return deferred.reject(err);
+                }
+                if (user) {
+                    var modulePermissions = _.where(user.permissions.modules, { moduleCode: moduleCode});
+
+                    if (modulePermissions.length > 0) {
+                        for (var i = 0; i < modulePermissions.length; i++) {
+                            modulePermissions[i].permission = permission;
+                        }
+                    }
+                    else {
+                        user.permissions.modules.push({
+                            moduleCode: moduleCode,
+                            permission: permission
+                        })
+                    }
+                    user.save((err)=> {
+                        if (err) {
+                            return deferred.reject();
+                        }
+                        return deferred.resolve();
+                    });
+
+                }
+                else {
+                    deferred.reject({message: 'User does not exist'});
                 }
             });
 

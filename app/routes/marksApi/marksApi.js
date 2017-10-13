@@ -18,7 +18,7 @@ module.exports = function ModulesApi ({
     * @apiParam {String} assessmentId The object id of the assessment
     *
     * @apiSuccess {Object[]}  marks Module assessments
-    * @apiSuccess {String}  marks.userId Student number
+    * @apiSuccess {String}  marks.username Student number
     * @apiSuccess {String}  marks.assessment Assessment id
     * @apiSuccess {Object[]}  marks.questionResults Nested question results
     * @apiSuccess {Number}  marks.finalResult Final result of assessment
@@ -46,7 +46,7 @@ module.exports = function ModulesApi ({
     * @apiHeader (Authorization) {String} Authorization Authorization token
     *
     * @apiParam {Object[]} marks The marks array
-    * @apiParam {String} marks.userId The student number
+    * @apiParam {String} marks.username The student number
     * @apiParam {String} marks.mark The student's final mark for this assessment
     * @apiParam {String} assessmentId The assessment id to mark
     * @apiParam {String} moduleCode The module code associated with the assessment
