@@ -1,6 +1,7 @@
 {
     // The base URL for the application
     "baseUrl": "http://localhost:3000",
+    "clientUrl": "http://localhost:4200",
     "database": {
         // The hostname for the mongo database
         "host": "mongodb://localhost:27017/time-series"
