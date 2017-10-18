@@ -20,7 +20,7 @@ module.exports = function ModulesApi ({
     * @apiSuccess {String}  modules.name Name
     * @apiSuccess {String}  modules.code Module Code
     */
-    router.get('/', authorisation.adminOnly, (req, res) => {
+    router.get('/', (req, res) => {
         
         modulesService.getModules()
         .then(function(modules){
