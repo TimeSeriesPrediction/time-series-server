@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 module.exports = function() {
 
   const querySchema = new mongoose.Schema({
-    userId: {
+    username: {
       type: String,
       required: true
     },
