@@ -11,6 +11,7 @@ module.exports = function({
             var deferred = q.defer();
 
             var subject = "Password Reset Email";
+
             var html = "<h2>You have requested a password change, please use <a>" + config.get('clientUrl') + "/account/reset/" + token +"</a></h2>";
 
             mailer.sendMail(email, subject, html)
